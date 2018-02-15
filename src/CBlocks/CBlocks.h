@@ -22,7 +22,7 @@ private:
   const char* clientID;
   MQTT mqtt;
 
-  const char* getOutputTopicFor(unsigned int resourceID);
+  String getOutputTopicFor(unsigned int resourceID);
   void initMQTTClient();
   void ensureConnected();
 

@@ -1,26 +1,38 @@
 #include "Arduino.h"
 #include "Util.h"
 
-const char* Util::getClientID(unsigned int objectID, unsigned int instanceID){
-  char clientID[20];
-
-  snprintf(clientID, 20, "%u-%u", objectID, instanceID);
+String Util::getClientID(unsigned int objectID, unsigned int instanceID){
+  String clientID(objectID);
+  clientID.concat("-");
+  clientID.concat(instanceID);
 
   return clientID;
 }
 
-const char* Util::getOutputTopic(unsigned int objectID, unsigned instanceID, int resourceID){
-  char topic[100];
-
-  snprintf(topic, 100, "%u/%u/%u/output", objectID, instanceID, resourceID);
+String Util::getOutputTopic(unsigned int objectID, unsigned instanceID, int resourceID){
+  String topic(objectID);
+  topic.concat("/");
+  topic.concat(instanceID);
+  topic.concat("/");
+  topic.concat(resourceID);
+  topic.concat("/");
+  topic.concat("output");
 
   return topic;
 }
 
-const char* Util::getInputTopic(unsigned int objectID, unsigned instanceID, int resourceID){
-  char topic[100];
-
-  snprintf(topic, 100, "%u/%u/%u/input", objectID, instanceID, resourceID);
+String Util::getInputTopic(unsigned int objectID, unsigned instanceID, int resourceID){
+  String topic(objectID);
+  topic.concat("/");
+  topic.concat(instanceID);
+  topic.concat("/");
+  topic.concat(resourceID);
+  topic.concat("/");
+  topic.concat("input");
 
   return topic;
+}
+
+String Util::getPayloadFor(unsigned int value){
+  return String(value);
 }

@@ -56,4 +56,6 @@ void setup(){
 }
 
 void loop(){
+  delay(1000);
+  cblocks->updateResource(0, random(0, 50));
 }

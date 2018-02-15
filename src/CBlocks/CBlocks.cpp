@@ -4,7 +4,7 @@
 CBlocks::CBlocks(unsigned int objectID, unsigned int instanceID, MQTT mqtt){
   this->objectID = objectID;
   this->instanceID = instanceID;
-  this->clientID = Util::getClientID(objectID, instanceID);
+  this->clientID = Util::getClientID(objectID, instanceID).c_str();
   this->mqtt = mqtt;
 }
 
@@ -19,6 +19,7 @@ void CBlocks::initMQTTClient(){
 
 void CBlocks::updateResource(unsigned int resourceID, unsigned int value){
   ensureConnected();
+  mqtt.client->publish(getOutputTopicFor(resourceID).c_str(), Util::getPayloadFor(value).c_str());
 }
 
 void CBlocks::ensureConnected(){
@@ -38,6 +39,6 @@ void CBlocks::ensureConnected(){
   mqtt.client->loop();
 }
 
-const char* CBlocks::getOutputTopicFor(unsigned int resourceID){
+String CBlocks::getOutputTopicFor(unsigned int resourceID){
   return Util::getOutputTopic(objectID, instanceID, resourceID);
 }
