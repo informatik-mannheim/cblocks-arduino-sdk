@@ -10,6 +10,6 @@ CBlocks::CBlocks(unsigned int objectID, unsigned int instanceID, PubSubClient* m
 void CBlocks::updateResource(unsigned int resourceID, unsigned int value){
 }
 
-String CBlocks::getOutputTopicFor(unsigned int resourceID){
-  Util::getOutputTopic(objectID, instanceID, resourceID);
+const char* CBlocks::getOutputTopicFor(unsigned int resourceID){
+  return Util::getOutputTopic(objectID, instanceID, resourceID);
 }

@@ -6,6 +6,7 @@
 class Util{
 public:
   static const char* getOutputTopic(unsigned int objectID, unsigned instanceID, int resourceID);
+  static const char* getInputTopic(unsigned int objectID, unsigned instanceID, int resourceID);
 };
 
 #endif
