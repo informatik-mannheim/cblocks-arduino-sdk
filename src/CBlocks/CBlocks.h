@@ -34,6 +34,7 @@ public:
 
   void begin();
   void updateResource(unsigned int resourceID, unsigned int value);
+  void updateResource(unsigned int resourceID, float value);
 };
 
 #endif

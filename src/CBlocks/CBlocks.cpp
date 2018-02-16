@@ -59,3 +59,8 @@ void CBlocks::updateResource(unsigned int resourceID, unsigned int value){
 String CBlocks::getOutputTopicFor(unsigned int resourceID){
   return Util::getOutputTopic(objectID, instanceID, resourceID);
 }
+
+void CBlocks::updateResource(unsigned int resourceID, float value){
+  ensureConnected();
+  mqtt.client->publish(getOutputTopicFor(resourceID).c_str(), Util::getPayloadFor(value).c_str());
+}

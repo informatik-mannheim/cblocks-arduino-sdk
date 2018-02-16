@@ -23,7 +23,12 @@ void getNamedTopic() {
 }
 
 void getIntegerPayload(){
-  TEST_ASSERT_EQUAL_STRING("55", Util::getPayloadFor(55).c_str());
+  unsigned int value = 55;
+  TEST_ASSERT_EQUAL_STRING("55", Util::getPayloadFor(value).c_str());
+}
+
+void getFloatPayload(){
+  TEST_ASSERT_EQUAL_STRING("55.00", Util::getPayloadFor(55.0f).c_str());
 }
 
 void getJSONPayload(){
@@ -38,7 +43,6 @@ void getJSONPayload(){
   data.add(2.302038);
 
   String payload = Util::getPayloadFor(root);
-  Serial.println(payload);
   TEST_ASSERT_EQUAL_STRING("{\"sensor\":\"gps\",\"time\":1351824120,\"data\":[48.75608,2.302038]}", payload.c_str());
 }
 
@@ -68,6 +72,7 @@ void run_tests(){
   RUN_TEST(getJSONPayload);
   RUN_TEST(getLastWill);
   RUN_TEST(getFirstWill);
+  RUN_TEST(getFloatPayload);
   UNITY_END();
 }
 

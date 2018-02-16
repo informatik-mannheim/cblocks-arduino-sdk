@@ -47,6 +47,10 @@ String Util::getPayloadFor(unsigned int value){
   return String(value);
 }
 
+String Util::getPayloadFor(float value){
+  return String(value);
+}
+
 String Util::getPayloadFor(JsonObject& data){
   String payload;
   data.printTo(payload);

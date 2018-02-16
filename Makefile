@@ -9,3 +9,12 @@ integration_run:
 
 integration_build:
 	pio run -d test/integration
+
+temperature_build:
+	pio run -d examples/temperature/src
+
+temperature_run:
+	pio run -d examples/temperature/src -t upload; pio device monitor -b 115200
+
+temperature_test:
+	pio run -d examples/temperature/tests -t upload; pio device monitor -b 115200
