@@ -4,7 +4,7 @@
 CBlocks::CBlocks(unsigned int objectID, unsigned int instanceID, MQTT mqtt){
   this->objectID = objectID;
   this->instanceID = instanceID;
-  this->clientID = Util::getClientID(objectID, instanceID).c_str();
+  this->clientID = Util::getClientID(objectID, instanceID);
   this->mqtt = mqtt;
 }
 
@@ -27,7 +27,7 @@ void CBlocks::ensureConnected(){
     Serial.print("Attempting MQTT connection to ");
     Serial.print(String(mqtt.host) + String(" "));
 
-    if (mqtt.client->connect(clientID, mqtt.username, mqtt.password)) {
+    if (mqtt.client->connect(clientID.c_str(), mqtt.username, mqtt.password)) {
       Serial.println("connected");
     } else {
       Serial.print("failed, rc=");

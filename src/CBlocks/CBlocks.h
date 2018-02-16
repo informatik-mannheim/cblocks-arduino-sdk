@@ -19,7 +19,7 @@ class CBlocks
 private:
   unsigned int objectID;
   unsigned int instanceID;
-  const char* clientID;
+  String clientID;
   MQTT mqtt;
 
   String getOutputTopicFor(unsigned int resourceID);
