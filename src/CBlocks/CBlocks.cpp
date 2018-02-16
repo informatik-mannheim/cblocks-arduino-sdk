@@ -10,6 +10,7 @@ CBlocks::CBlocks(unsigned int objectID, unsigned int instanceID, MQTT mqtt){
 
 void CBlocks::begin(){
   initMQTTClient();
+  publishFirstWill();
 }
 
 void CBlocks::initMQTTClient(){
@@ -17,17 +18,12 @@ void CBlocks::initMQTTClient(){
   ensureConnected();
 }
 
-void CBlocks::updateResource(unsigned int resourceID, unsigned int value){
-  ensureConnected();
-  mqtt.client->publish(getOutputTopicFor(resourceID).c_str(), Util::getPayloadFor(value).c_str());
-}
-
 void CBlocks::ensureConnected(){
   while (!mqtt.client->connected()) {
     Serial.print("Attempting MQTT connection to ");
     Serial.print(String(mqtt.host) + String(" "));
 
-    if (mqtt.client->connect(clientID.c_str(), mqtt.username, mqtt.password)) {
+    if (connectIsSuccessfull()) {
       Serial.println("connected");
     } else {
       Serial.print("failed, rc=");
@@ -37,6 +33,27 @@ void CBlocks::ensureConnected(){
     }
   }
   mqtt.client->loop();
+}
+
+bool CBlocks::connectIsSuccessfull(){
+  Will lastWill = Util::getLastWillFor(objectID, instanceID);
+
+  return mqtt.client->connect(clientID.c_str(), mqtt.username, mqtt.password, lastWill.topic.c_str(), lastWill.qos, lastWill.retain, lastWill.message.c_str());
+}
+
+void CBlocks::publishFirstWill(){
+  ensureConnected();
+  Will firstWill = Util::getFirstWillFor(objectID, instanceID);
+  mqtt.client->publish(firstWill.topic.c_str(), firstWill.message.c_str(), true);
+}
+
+String CBlocks::getNamedTopicFor(String resourceName){
+  return Util::getNamedTopic(objectID, instanceID, resourceName);
+}
+
+void CBlocks::updateResource(unsigned int resourceID, unsigned int value){
+  ensureConnected();
+  mqtt.client->publish(getOutputTopicFor(resourceID).c_str(), Util::getPayloadFor(value).c_str());
 }
 
 String CBlocks::getOutputTopicFor(unsigned int resourceID){

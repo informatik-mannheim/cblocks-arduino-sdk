@@ -22,9 +22,12 @@ private:
   String clientID;
   MQTT mqtt;
 
+  String getNamedTopicFor(String resourceName);
   String getOutputTopicFor(unsigned int resourceID);
   void initMQTTClient();
   void ensureConnected();
+  bool connectIsSuccessfull();
+  void publishFirstWill();
 
 public:
   CBlocks(unsigned int objectID, unsigned int instanceID, MQTT mqtt);
