@@ -10,7 +10,7 @@
 #define INSTANCE_ID 0
 
 const char* ssid = "cblocks-gateway";
-const char* password = "";
+const char* password = "naeheaufdistanz";
 
 WiFiClient wifiClient;
 PubSubClient mqttClient(wifiClient);
@@ -54,7 +54,7 @@ void init_cblocks(){
 }
 
 void init_sensor(){
-  temperatureSensor = new Temperature(TEMP_PIN, UPDATE_INTERVAL_IN_MS, cblocks);
+  temperatureSensor = new Temperature(TEMP_PIN, cblocks);
   temperatureSensor->begin();
 }
 
@@ -66,5 +66,6 @@ void setup(){
 }
 
 void loop(){
+  delay(UPDATE_INTERVAL_IN_MS);
   temperatureSensor->update();
 }

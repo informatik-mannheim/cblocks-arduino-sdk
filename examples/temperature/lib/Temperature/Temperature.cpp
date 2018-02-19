@@ -2,9 +2,8 @@
 #include "Temperature.h"
 #include "TemperatureUtil.h"
 
-Temperature::Temperature(int analogPin, unsigned int updateIntervalInMS, CBlocks* cblocks){
+Temperature::Temperature(int analogPin, CBlocks* cblocks){
   this->analogPin = analogPin;
-  this->updateIntervalInMS = updateIntervalInMS;
   this->cblocks = cblocks;
 }
 
@@ -17,7 +16,6 @@ void Temperature::initPins(){
 }
 
 void Temperature::update(){
-  delay(updateIntervalInMS); //TODO wait for millis
   readMilliVolts();
   computeTemperature();
   publishTemperature();
@@ -35,8 +33,4 @@ void Temperature::computeTemperature(){
 
 void Temperature::publishTemperature(){
     cblocks->updateResource(TEMPERATURE_RESOURCE_ID, temperatureInCelsius);
-}
-
-int Temperature::getComputedTemperature(){
-  return temperatureInCelsius;
 }

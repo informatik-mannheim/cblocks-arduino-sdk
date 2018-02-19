@@ -16,7 +16,6 @@ private:
   int analogPin;
   unsigned int readingMilliVolts;
   unsigned int analogValue;
-  unsigned int updateIntervalInMS;
   float temperatureInCelsius;
   CBlocks* cblocks;
 
@@ -26,11 +25,10 @@ private:
   void publishTemperature();
 
 public:
-  Temperature(int analogPin, unsigned int updateIntervalInMS, CBlocks* cblocks);
+  Temperature(int analogPin, CBlocks* cblocks);
 
   void begin();
   void update();
-  int getComputedTemperature();
 };
 
 #endif

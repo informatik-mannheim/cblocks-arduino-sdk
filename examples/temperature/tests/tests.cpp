@@ -10,8 +10,10 @@ void calculateTemperatureReturns25ForTmp36(){
   TEST_ASSERT_EQUAL(25.0f, TemperatureUtil::computeTemperature(750, 10, -50));
 }
 
-void calculateTemperatureReturns25ForTmp36WithVoltageDivider(){
+void calculateTemperatureForTmp36WithVoltageDivider(){
   TEST_ASSERT_EQUAL(25.0f, TemperatureUtil::computeTemperature(375, 5, -50));
+  TEST_ASSERT_EQUAL(24.0f, TemperatureUtil::computeTemperature(370, 5, -50));
+  TEST_ASSERT_EQUAL(0.0f, TemperatureUtil::computeTemperature(250, 5, -50));
 }
 
 void readMilliVolts(){
@@ -26,7 +28,7 @@ void initAndWaitForSerial(){
 void run_tests(){
   UNITY_BEGIN();
   RUN_TEST(calculateTemperatureReturns25ForTmp36);
-  RUN_TEST(calculateTemperatureReturns25ForTmp36WithVoltageDivider);
+  RUN_TEST(calculateTemperatureForTmp36WithVoltageDivider);
   RUN_TEST(readMilliVolts);
   UNITY_END();
 }
