@@ -1,8 +1,8 @@
 #include "Arduino.h"
 #include "MQTTConf.h"
 #include "CBlocks.h"
-#include "Util.h"
 #include "Network.h"
+#include "CBlocksMaker.h"
 #include "Temperature.h"
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
@@ -52,9 +52,7 @@ void setup_wifi() {
 }
 
 void init_cblocks(){
-  network = new Network(Util::getClientID(OBJECT_ID, INSTANCE_ID), mqtt, Util::getFirstWillFor(OBJECT_ID, INSTANCE_ID), Util::getLastWillFor(OBJECT_ID, INSTANCE_ID));
-
-  cblocks = new CBlocks(OBJECT_ID, INSTANCE_ID, network);
+  cblocks = makeMQTT(OBJECT_ID, INSTANCE_ID, mqtt);
   cblocks->begin();
 }
 
