@@ -3,13 +3,7 @@
 
 #include "Arduino.h"
 #include "ArduinoJson.h"
-
-struct Will{
-  String topic;
-  int qos;
-  bool retain;
-  String message;
-};
+#include "Will.h"
 
 class Util{
 public:
