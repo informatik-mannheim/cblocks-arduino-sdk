@@ -16,6 +16,7 @@ public:
   static String getPayloadFor(JsonObject& data);
   static Will getLastWillFor(unsigned int objectID, unsigned instanceID);
   static Will getFirstWillFor(unsigned int objectID, unsigned instanceID);
+  static String validateCommandJSON(String json, DynamicJsonBuffer& buffer);
 };
 
 #endif

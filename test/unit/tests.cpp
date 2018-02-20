@@ -62,6 +62,62 @@ void getFirstWill(){
   TEST_ASSERT_EQUAL_STRING("online", will.message.c_str());
 }
 
+void validateCommandJSONReturnsEmptyStringIfValid(){
+  DynamicJsonBuffer buffer;
+
+  String json("{\"requestID\": 4711,\"clientID\": \"node-red\",\"data\": {\"value\": true}}");
+
+  TEST_ASSERT_EQUAL_STRING("", Util::validateCommandJSON(json, buffer).c_str());
+}
+
+void validateCommandJSONReturnsFailureIfRequestIDIsMissing(){
+  DynamicJsonBuffer buffer;
+
+  String json("{\"clientID\": \"node-red\",\"data\": {\"value\": true}}");
+
+  TEST_ASSERT_EQUAL_STRING("Command has no \"requestID\".", Util::validateCommandJSON(json, buffer).c_str());
+}
+
+void validateCommandJSONReturnsFailureIfRequestIDIsNotALong(){
+  DynamicJsonBuffer buffer;
+
+  String json("{\"requestID\": true,\"clientID\": \"node-red\",\"data\": {\"value\": true}}");
+
+  TEST_ASSERT_EQUAL_STRING("\"requestID\" must be of type long.", Util::validateCommandJSON(json, buffer).c_str());
+}
+
+void validateCommandJSONReturnsFailureIfClientIDIsMissing(){
+  DynamicJsonBuffer buffer;
+
+  String json("{\"requestID\": 4711, \"data\": {\"value\": true}}");
+
+  TEST_ASSERT_EQUAL_STRING("Command has no \"clientID\".", Util::validateCommandJSON(json, buffer).c_str());
+}
+
+void validateCommandJSONReturnsFailureIfClientIDIsNotAString(){
+  DynamicJsonBuffer buffer;
+
+  String json("{\"requestID\": 4711,\"clientID\": 1234,\"data\": {\"value\": true}}");
+
+  TEST_ASSERT_EQUAL_STRING("\"clientID\" must be of type String.", Util::validateCommandJSON(json, buffer).c_str());
+}
+
+void validateCommandJSONReturnsFailureIfDataIsMissing(){
+  DynamicJsonBuffer buffer;
+
+  String json("{\"requestID\": 4711,\"clientID\": \"node-red\"}");
+
+  TEST_ASSERT_EQUAL_STRING("Command has no \"data\".", Util::validateCommandJSON(json, buffer).c_str());
+}
+
+void validateCommandJSONReturnsFailureIfDataIsNoJSON(){
+  DynamicJsonBuffer buffer;
+
+  String json("{\"requestID\": 4711,\"clientID\": \"node-red\",\"data\": true}");
+
+  TEST_ASSERT_EQUAL_STRING("Data is invalid JSON.", Util::validateCommandJSON(json, buffer).c_str());
+}
+
 void run_tests(){
   UNITY_BEGIN();
   RUN_TEST(getClientID);
@@ -73,6 +129,13 @@ void run_tests(){
   RUN_TEST(getLastWill);
   RUN_TEST(getFirstWill);
   RUN_TEST(getFloatPayload);
+  RUN_TEST(validateCommandJSONReturnsEmptyStringIfValid);
+  RUN_TEST(validateCommandJSONReturnsFailureIfRequestIDIsMissing);
+  RUN_TEST(validateCommandJSONReturnsFailureIfRequestIDIsNotALong);
+  RUN_TEST(validateCommandJSONReturnsFailureIfClientIDIsMissing);
+  RUN_TEST(validateCommandJSONReturnsFailureIfClientIDIsNotAString);
+  RUN_TEST(validateCommandJSONReturnsFailureIfDataIsMissing);
+  RUN_TEST(validateCommandJSONReturnsFailureIfDataIsNoJSON);
   UNITY_END();
 }
 

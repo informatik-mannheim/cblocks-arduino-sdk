@@ -1,5 +1,6 @@
 #include "Arduino.h"
 #include "Util.h"
+#include "ArduinoJson.h"
 
 String Util::getClientID(unsigned int objectID, unsigned int instanceID){
   String clientID(objectID);
@@ -78,4 +79,41 @@ Will Util::getFirstWillFor(unsigned int objectID, unsigned int instanceID){
   };
 
   return will;
+}
+
+// TODO check types
+String Util::validateCommandJSON(String json, DynamicJsonBuffer& buffer){
+  JsonObject& root = buffer.parseObject(json);
+
+  if(!root.success()){
+    return String("Invalid JSON.");
+  }
+
+  if(!root.containsKey("requestID")){
+    return String("Command has no \"requestID\".");
+  }
+
+  if(!root.is<unsigned long>("requestID")){
+    return String("\"requestID\" must be of type long.");
+  }
+
+  if(!root.containsKey("clientID")){
+    return String("Command has no \"clientID\".");
+  }
+
+  if(!root.is<const char*>("clientID")){
+    return String("\"clientID\" must be of type String.");
+  }
+
+  if(!root.containsKey("data")){
+    return String("Command has no \"data\".");
+  }
+
+  JsonObject& data = buffer.parseObject(root.get<String>("data"));
+
+  if(!data.success()){
+    return String("Data is invalid JSON.");
+  }
+
+  return String("");
 }
