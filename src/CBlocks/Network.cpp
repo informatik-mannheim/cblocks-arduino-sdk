@@ -27,6 +27,7 @@ void Network::initMQTTClient(){
   ensureConnected();
 }
 
+//TODO clean up function
 void Network::subscriptionCallback(char *topic, byte *payload, unsigned int length){
   JsonObject& json = Util::getJSONForPayload(payload, length, *jsonBuffer);
   String clientID = Util::getClientIDFromCommandTopic(String(topic));

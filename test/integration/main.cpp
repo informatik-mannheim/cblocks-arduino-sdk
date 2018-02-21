@@ -48,12 +48,26 @@ void setup_wifi() {
   Serial.println(WiFi.localIP());
 }
 
+//TODO connect LED
 CommandResponse cb(JsonObject& json){
   CommandResponse response;
-
   response.requestID = json["requestID"];
-  response.success = true;
-  response.message = String("Test Test");
+
+  if(json.is<bool>("data")){
+    bool isLEDSet = json.get<bool>("data");
+    Serial.println(isLEDSet);
+    if(isLEDSet){
+      digitalWrite(LED_BUILTIN, HIGH);
+    }else{
+      digitalWrite(LED_BUILTIN, LOW);
+    }
+
+    response.success = true;
+    response.message = String("LED set");
+  }else{
+    response.success = false;
+    response.message = String("Data must be of type bool in order to set LED.");
+  }
 
   return response;
 }
@@ -65,10 +79,15 @@ void init_cblocks(){
   cblocks->registerCommand(0, cb);
 }
 
+void init_pins(){
+  pinMode(LED_BUILTIN, OUTPUT);
+}
+
 void setup(){
   initAndWaitForSerial();
   setup_wifi();
   init_cblocks();
+  init_pins();
 }
 
 void loop(){
