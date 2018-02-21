@@ -5,6 +5,8 @@
 #include "PubSubClient.h"
 #include "ArduinoJson.h"
 #include "Will.h"
+#include "Command.h"
+#include "SimpleList.h"
 
 #define RECONNECT_TIME_IN_MS 5000
 
@@ -16,22 +18,33 @@ struct MQTT {
   const char* password;
 };
 
+struct Subscription{
+  String topic;
+  commandCallback cb;
+};
+
 class Network{
 private:
-  String clientID;
-  Will firstWill;
-  Will lastWill;
-  MQTT mqtt;
-  DynamicJsonBuffer jsonBuffer;
+  static String clientID;
+  static Will firstWill;
+  static Will lastWill;
+  static MQTT mqtt;
+  static DynamicJsonBuffer* jsonBuffer;
+  static SimpleList<Subscription*> subscriptions;
 
   void initMQTTClient();
-  void ensureConnected();
-  bool connectIsSuccessfull();
+  static void ensureConnected();
+  static bool connectIsSuccessfull();
   void publishFirstWill();
+  void addSubscription(String topic, commandCallback cb);
+  void subscribe(String topic);
+  static void subscriptionCallback(char* topic, byte* payload, unsigned int length);
+  static CommandResponse callCommandCallbackFor(String topic, JsonObject& json);
 public:
   Network(String clientID, MQTT mqtt, Will firstWill, Will lastWill);
   void init();
-  void publish(String topic, String payload);
+  static void publish(String topic, String payload);
+  void subscribe(String topic, commandCallback cb);
 };
 
 #endif

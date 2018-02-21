@@ -23,7 +23,9 @@ String Util::getOutputTopic(unsigned int objectID, unsigned instanceID, int reso
 }
 
 String Util::getInputTopic(unsigned int objectID, unsigned instanceID, int resourceID){
-  String topic(objectID);
+  String topic("+");
+  topic.concat("/");
+  topic.concat(objectID);
   topic.concat("/");
   topic.concat(instanceID);
   topic.concat("/");
@@ -81,39 +83,48 @@ Will Util::getFirstWillFor(unsigned int objectID, unsigned int instanceID){
   return will;
 }
 
-// TODO check types
-String Util::validateCommandJSON(String json, DynamicJsonBuffer& buffer){
-  JsonObject& root = buffer.parseObject(json);
+JsonObject& Util::getJSONForPayload(byte *payload, unsigned int length, DynamicJsonBuffer& buffer){
+  return buffer.parseObject((char*)payload);
+}
 
-  if(!root.success()){
-    return String("Invalid JSON.");
-  }
-
-  if(!root.containsKey("requestID")){
+String Util::validateCommandRequestID(JsonObject& json){
+  if(!json.containsKey("requestID")){
     return String("Command has no \"requestID\".");
   }
 
-  if(!root.is<unsigned long>("requestID")){
+  if(!json.is<unsigned long>("requestID")){
     return String("\"requestID\" must be of type long.");
   }
 
-  if(!root.containsKey("clientID")){
-    return String("Command has no \"clientID\".");
-  }
+  return String("");
+}
 
-  if(!root.is<const char*>("clientID")){
-    return String("\"clientID\" must be of type String.");
-  }
-
-  if(!root.containsKey("data")){
+String Util::validateCommandData(JsonObject& json){
+  if(!json.containsKey("data")){
     return String("Command has no \"data\".");
   }
 
-  JsonObject& data = buffer.parseObject(root.get<String>("data"));
-
-  if(!data.success()){
-    return String("Data is invalid JSON.");
-  }
-
   return String("");
+}
+
+String Util::getResponseTopic(String clientID){
+  String& responseTopic = clientID;
+  responseTopic.concat("/");
+  responseTopic.concat("responses");
+
+  return responseTopic;
+}
+
+String Util::getClientIDFromCommandTopic(String topic){
+  int indexOfFirstTopicSeperator= topic.indexOf('/');
+  return topic.substring(0, indexOfFirstTopicSeperator);
+}
+
+String Util::removeClientIDFromCommandTopic(String topic){
+  int indexOfFirstTopicSeperator= topic.indexOf('/');
+  String clientIndependentTopic("+/");
+
+  clientIndependentTopic.concat(topic.substring(indexOfFirstTopicSeperator+1));
+
+  return clientIndependentTopic;
 }

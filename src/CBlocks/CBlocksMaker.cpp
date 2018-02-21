@@ -4,7 +4,10 @@
 #include "Util.h"
 
 CBlocks* makeMQTT(unsigned int objectID, unsigned int instanceID, MQTT mqtt){
-  Network* network = new Network(Util::getClientID(objectID, instanceID), mqtt, Util::getFirstWillFor(objectID, instanceID), Util::getLastWillFor(objectID, instanceID));
+  String clientID = Util::getClientID(objectID, instanceID);
+  Will firstWill = Util::getFirstWillFor(objectID, instanceID);
+  Will lastWill = Util::getLastWillFor(objectID, instanceID);
+  Network* network = new Network(clientID, mqtt, firstWill, lastWill);
 
   return new CBlocks(objectID, instanceID, network);
 }

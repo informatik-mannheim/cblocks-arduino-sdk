@@ -1,6 +1,7 @@
 #include "Arduino.h"
 #include "MQTTConf.h"
 #include "CBlocks.h"
+#include "Command.h"
 #include "Network.h"
 #include "CBlocksMaker.h"
 #include <ESP8266WiFi.h>
@@ -11,7 +12,7 @@
 #define INSTANCE_ID 0
 
 const char* ssid = "cblocks-gateway";
-const char* password = "";
+const char* password = "naeheaufdistanz";
 
 WiFiClient wifiClient;
 PubSubClient mqttClient(wifiClient);
@@ -47,9 +48,21 @@ void setup_wifi() {
   Serial.println(WiFi.localIP());
 }
 
+CommandResponse cb(JsonObject& json){
+  CommandResponse response;
+
+  response.requestID = json["requestID"];
+  response.success = true;
+  response.message = String("Test Test");
+
+  return response;
+}
+
 void init_cblocks(){
   cblocks = makeMQTT(OBJECT_ID, INSTANCE_ID, mqtt);
   cblocks->begin();
+
+  cblocks->registerCommand(0, cb);
 }
 
 void setup(){

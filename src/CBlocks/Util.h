@@ -16,7 +16,12 @@ public:
   static String getPayloadFor(JsonObject& data);
   static Will getLastWillFor(unsigned int objectID, unsigned instanceID);
   static Will getFirstWillFor(unsigned int objectID, unsigned instanceID);
-  static String validateCommandJSON(String json, DynamicJsonBuffer& buffer);
+  static JsonObject& getJSONForPayload(byte *payload, unsigned int length, DynamicJsonBuffer& buffer);
+  static String validateCommandRequestID(JsonObject& json);
+  static String validateCommandData(JsonObject& json);
+  static String getClientIDFromCommandTopic(String topic);
+  static String removeClientIDFromCommandTopic(String topic);
+  static String getResponseTopic(String clientID);
 };
 
 #endif

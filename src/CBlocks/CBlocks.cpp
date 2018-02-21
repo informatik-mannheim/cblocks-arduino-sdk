@@ -22,3 +22,11 @@ String CBlocks::getOutputTopicFor(unsigned int resourceID){
 void CBlocks::updateResource(unsigned int resourceID, float value){
   network->publish(getOutputTopicFor(resourceID), Util::getPayloadFor(value));
 }
+
+void CBlocks::registerCommand(unsigned int resourceID, commandCallback cb){
+  network->subscribe(getInputTopicFor(resourceID), cb);
+}
+
+String CBlocks::getInputTopicFor(unsigned int resourceID){
+  return Util::getInputTopic(objectID, instanceID, resourceID);
+}

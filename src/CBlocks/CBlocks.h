@@ -3,6 +3,7 @@
 
 #include "Arduino.h"
 #include "Network.h"
+#include "Command.h"
 
 class CBlocks
 {
@@ -12,13 +13,14 @@ private:
   Network* network;
 
   String getOutputTopicFor(unsigned int resourceID);
-
+  String getInputTopicFor(unsigned int resourceID);
 public:
   CBlocks(unsigned int objectID, unsigned int instanceID, Network* network);
 
   void begin();
   void updateResource(unsigned int resourceID, unsigned int value);
   void updateResource(unsigned int resourceID, float value);
+  void registerCommand(unsigned int resourceID, commandCallback cb);
 };
 
 #endif
