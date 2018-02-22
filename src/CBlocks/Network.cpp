@@ -7,6 +7,10 @@ Will Network::firstWill = Will();
 Will Network::lastWill = Will();
 MQTT Network::mqtt = MQTT();
 DynamicJsonBuffer* Network::jsonBuffer = new DynamicJsonBuffer();
+JsonObject* Network::commandJson = &(jsonBuffer->createObject());
+String Network::commandTopic = String("");
+String Network::commandClientID = String("");
+CommandResponse Network::commandResponse = CommandResponse();
 SimpleList<Subscription*> Network::subscriptions = SimpleList<Subscription*>();
 
 Network::Network(String clientID, MQTT mqtt, Will firstWill, Will lastWill){
@@ -27,46 +31,62 @@ void Network::initMQTTClient(){
   ensureConnected();
 }
 
-//TODO clean up function
 void Network::subscriptionCallback(char *topic, byte *payload, unsigned int length){
-  JsonObject& json = Util::getJSONForPayload(payload, length, *jsonBuffer);
-  String clientID = Util::getClientIDFromCommandTopic(String(topic));
-  String validation = Util::validateCommandRequestID(json);
+  parseCommand(topic, payload, length);
 
-  // invalid request id
-  if(validation.length()){
-    return;
+  if(commandSuccessfullyParsed()){
+    getCommandResponse();
+    respondToCommandIfRequestIDPresent();
   }
-
-  validation = Util::validateCommandData(json);
-
-  CommandResponse response;
-
-  // invalid data
-  if(validation.length()){
-    response.success = false;
-    response.requestID = json["requestID"];
-    response.message = validation;
-    publish(Util::getResponseTopic(clientID), response.toJSON(*jsonBuffer));
-    return;
-  }
-
-  response = callCommandCallbackFor(String(topic), json);
-
-  publish(Util::getResponseTopic(clientID), response.toJSON(*jsonBuffer));
 }
 
-CommandResponse Network::callCommandCallbackFor(String topic, JsonObject& json){
-  topic = Util::removeClientIDFromCommandTopic(topic);
+void Network::parseCommand(char *topic, byte *payload, unsigned int length){
+  commandTopic = Util::removeClientIDFromCommandTopic(topic);
+  commandJson = &Util::getJSONForPayload(payload, length, *jsonBuffer);
+  commandClientID = Util::getClientIDFromCommandTopic(String(topic));
+}
+
+bool Network::commandSuccessfullyParsed(){
+  return commandJson->success();
+}
+
+void Network::getCommandResponse(){
+  if(commandHasValidCommandData()){
+    getResponseFromCommandCallback();
+  }else{
+    getValidationErrorResponse();
+  }
+}
+
+bool Network::commandHasValidCommandData(){
+  return (Util::validateCommandData(*commandJson).length() == 0);
+}
+
+void Network::getResponseFromCommandCallback(){
   for(SimpleList<Subscription*>::iterator itr = subscriptions.begin(); itr != subscriptions.end();){
-    if((*itr)->topic.equals(topic)){
-      return (*itr)->cb(json);
+    if((*itr)->topic.equals(commandTopic)){
+      commandResponse = (*itr)->cb(*commandJson);
+      return;
     }
 
     ++itr;
   }
+}
 
-  return CommandResponse();
+void Network::getValidationErrorResponse(){
+  commandResponse.success = false;
+  commandResponse.requestID = commandJson->get<long>("requestID");
+  commandResponse.message = Util::validateCommandData(*commandJson);
+}
+
+void Network::respondToCommandIfRequestIDPresent(){
+  if(commandHasValidRequestID()){
+    publish(Util::getResponseTopic(commandClientID), commandResponse.toJSON(*jsonBuffer));
+  }
+}
+
+bool Network::commandHasValidRequestID(){
+  return (Util::validateCommandRequestID(*commandJson).length() == 0);
 }
 
 void Network::ensureConnected(){

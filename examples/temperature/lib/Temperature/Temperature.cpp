@@ -32,5 +32,5 @@ void Temperature::computeTemperature(){
 }
 
 void Temperature::publishTemperature(){
-    cblocks->updateResource(TEMPERATURE_RESOURCE_ID, temperatureInCelsius);
+  cblocks->updateResource(TEMPERATURE_RESOURCE_ID, temperatureInCelsius);
 }

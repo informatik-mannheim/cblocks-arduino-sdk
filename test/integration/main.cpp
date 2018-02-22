@@ -10,6 +10,7 @@
 #define BAUD_RATE 115200
 #define OBJECT_ID 3303
 #define INSTANCE_ID 0
+#define LED_PIN 2
 
 const char* ssid = "cblocks-gateway";
 const char* password = "naeheaufdistanz";
@@ -54,13 +55,7 @@ CommandResponse cb(JsonObject& json){
   response.requestID = json["requestID"];
 
   if(json.is<bool>("data")){
-    bool isLEDSet = json.get<bool>("data");
-    Serial.println(isLEDSet);
-    if(isLEDSet){
-      digitalWrite(LED_BUILTIN, HIGH);
-    }else{
-      digitalWrite(LED_BUILTIN, LOW);
-    }
+    digitalWrite(LED_PIN, json.get<bool>("data"));
 
     response.success = true;
     response.message = String("LED set");
@@ -80,7 +75,7 @@ void init_cblocks(){
 }
 
 void init_pins(){
-  pinMode(LED_BUILTIN, OUTPUT);
+  pinMode(LED_PIN, OUTPUT);
 }
 
 void setup(){

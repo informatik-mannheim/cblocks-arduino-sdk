@@ -30,6 +30,10 @@ private:
   static Will lastWill;
   static MQTT mqtt;
   static DynamicJsonBuffer* jsonBuffer;
+  static JsonObject* commandJson;
+  static String commandTopic;
+  static String commandClientID;
+  static CommandResponse commandResponse;
   static SimpleList<Subscription*> subscriptions;
 
   void initMQTTClient();
@@ -39,7 +43,14 @@ private:
   void addSubscription(String topic, commandCallback cb);
   void subscribe(String topic);
   static void subscriptionCallback(char* topic, byte* payload, unsigned int length);
-  static CommandResponse callCommandCallbackFor(String topic, JsonObject& json);
+  static void parseCommand(char *topic, byte *payload, unsigned int length);
+  static bool commandSuccessfullyParsed();
+  static void getCommandResponse();
+  static bool commandHasValidCommandData();
+  static void getValidationErrorResponse();
+  static void getResponseFromCommandCallback();
+  static void respondToCommandIfRequestIDPresent();
+  static bool commandHasValidRequestID();
 public:
   Network(String clientID, MQTT mqtt, Will firstWill, Will lastWill);
   void init();
