@@ -28,6 +28,7 @@ namespace Neopixel{
     void publishStatus();
 
     static CommandResponse isOnCommandCallback(JsonObject& json);
+    static CommandResponse colorCommandCallback(JsonObject& json);
   };
 
   bool Neopixel::isOn = false;
@@ -80,6 +81,17 @@ namespace Neopixel{
     for(int i=0;i<strip->numPixels();i++){
       strip->setPixelColor(i, strip->Color(0, 0, 0));
     }
+  }
+
+  CommandResponse Neopixel::colorCommandCallback(JsonObject &json){
+    if(json.is<bool>("data")){
+      isOn = json["data"];
+      renderPixels();
+
+      return CommandResponse::getSuccessCommandResponseFor(json["requestID"]);
+    }
+
+    return CommandResponse::getErrorCommandResponseFor(json["requestID"], "Data must be of type bool.");
   }
 }
 
