@@ -9,6 +9,9 @@ struct CommandResponse{
   bool success;
   String message;
   String toJSON(DynamicJsonBuffer& buffer);
+
+  static CommandResponse getSuccessCommandResponseFor(unsigned int requestID);
+  static CommandResponse getErrorCommandResponseFor(unsigned int requestID, String message);
 };
 
 typedef CommandResponse (*commandCallback)(JsonObject& json);

@@ -15,3 +15,15 @@ String CommandResponse::toJSON(DynamicJsonBuffer& buffer){
 
   return result;
 }
+
+CommandResponse CommandResponse::getSuccessCommandResponseFor(unsigned int requestID){
+  CommandResponse r = {requestID, true, ""};
+
+  return r;
+}
+
+CommandResponse CommandResponse::getErrorCommandResponseFor(unsigned int requestID, String message){
+  CommandResponse r = {requestID, false, message};
+
+  return r;
+}

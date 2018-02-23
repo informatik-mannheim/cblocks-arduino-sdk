@@ -23,6 +23,14 @@ void CBlocks::updateResource(unsigned int resourceID, float value){
   network->publish(getOutputTopicFor(resourceID), Util::getPayloadFor(value));
 }
 
+void CBlocks::updateResource(unsigned int resourceID, bool value){
+  updateResource(resourceID, (unsigned int)value);
+}
+
+void CBlocks::updateResource(unsigned int resourceID, JsonObject& value){
+  network->publish(getOutputTopicFor(resourceID), Util::getPayloadFor(value));
+}
+
 void CBlocks::registerCommand(unsigned int resourceID, commandCallback cb){
   network->subscribe(getInputTopicFor(resourceID), cb);
 }

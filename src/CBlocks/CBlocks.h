@@ -20,6 +20,8 @@ public:
   void begin();
   void updateResource(unsigned int resourceID, unsigned int value);
   void updateResource(unsigned int resourceID, float value);
+  void updateResource(unsigned int resourceID, bool value);
+  void updateResource(unsigned int resourceID, JsonObject& json);
   void registerCommand(unsigned int resourceID, commandCallback cb);
 };
 

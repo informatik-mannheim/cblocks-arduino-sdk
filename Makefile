@@ -18,3 +18,12 @@ temperature_run:
 
 temperature_test:
 	pio run -d examples/temperature/tests -t upload; pio device monitor -b 115200
+
+neopixel_build:
+	pio run -d examples/neopixel/src
+
+neopixel_run:
+	pio run -d examples/neopixel/src -t upload; pio device monitor -b 115200
+
+neopixel_test:
+	pio run -d examples/neopixel/tests -t upload; pio device monitor -b 115200

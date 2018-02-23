@@ -142,6 +142,21 @@ void commandResponseToJSON(){
   TEST_ASSERT_EQUAL_STRING("{\"requestID\":4177,\"success\":true,\"message\":\"Fail.\"}", response.toJSON(buffer).c_str());
 }
 
+void getSuccessCommandResponse(){
+  CommandResponse response = CommandResponse::getSuccessCommandResponseFor(4711);
+
+  TEST_ASSERT_EQUAL(response.success, true);
+  TEST_ASSERT_EQUAL(response.requestID, 4711);
+}
+
+void getErrorCommandResponse(){
+  CommandResponse response = CommandResponse::getErrorCommandResponseFor(4711, String("Fail."));
+
+  TEST_ASSERT_EQUAL(response.success, false);
+  TEST_ASSERT_EQUAL(response.requestID, 4711);
+  TEST_ASSERT_TRUE(response.message.equals("Fail."));
+}
+
 void run_tests(){
   UNITY_BEGIN();
   RUN_TEST(getClientID);
@@ -163,6 +178,8 @@ void run_tests(){
   RUN_TEST(getClientIDFromCommandTopic);
   RUN_TEST(removeClientIDFromCommandTopic);
   RUN_TEST(commandResponseToJSON);
+  RUN_TEST(getSuccessCommandResponse);
+  RUN_TEST(getErrorCommandResponse);
   UNITY_END();
 }
 
