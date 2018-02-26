@@ -31,8 +31,8 @@ namespace Neopixel{
     static CommandResponse colorCommandCallback(JsonObject& json);
   };
 
-  bool Neopixel::isOn = false;
-  Color* Neopixel::color = new Color(0,255,255);
+  bool Neopixel::isOn = true;
+  Color* Neopixel::color = new Color(125,125,125);
   Adafruit_NeoPixel* Neopixel::strip = {0};
 
   Neopixel::Neopixel(Adafruit_NeoPixel* strip, CBlocks* cblocks){
@@ -44,6 +44,7 @@ namespace Neopixel{
     strip->begin();
     renderPixels();
     cblocks->registerCommand(IS_ON_RESOURCE_ID, isOnCommandCallback);
+    cblocks->registerCommand(COLOR_RESOURCE_ID, colorCommandCallback);
   }
 
   void Neopixel::publishStatus(){
@@ -84,14 +85,20 @@ namespace Neopixel{
   }
 
   CommandResponse Neopixel::colorCommandCallback(JsonObject &json){
-    if(json.is<bool>("data")){
-      isOn = json["data"];
-      renderPixels();
+    if(json.is<JsonObject>("data")){
+      JsonObject& data = json["data"];
 
-      return CommandResponse::getSuccessCommandResponseFor(json["requestID"]);
+      if(Color::isValidJson(data)){
+        color->importJson(data);
+        renderPixels();
+
+        return CommandResponse::getSuccessCommandResponseFor(json["requestID"]);
+      }
+
+      return CommandResponse::getErrorCommandResponseFor(json["requestID"], Color::validateJson(data));
     }
 
-    return CommandResponse::getErrorCommandResponseFor(json["requestID"], "Data must be of type bool.");
+    return CommandResponse::getErrorCommandResponseFor(json["requestID"], "Data must be a JSON object.");
   }
 }
 

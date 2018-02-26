@@ -68,6 +68,22 @@ void validateJsonReturnsErrorMessageIfRedIs256(){
   TEST_ASSERT_EQUAL_STRING("red must be a number between 0 and 255.", Neopixel::Color::validateJson(json).c_str());
 }
 
+void importJson(){
+  DynamicJsonBuffer buffer;
+  JsonObject& json = buffer.createObject();
+
+  json["red"] = 127;
+  json["green"] = 5;
+  json["blue"] = 130;
+
+  Neopixel::Color c = {0,0,0};
+  c.importJson(json);
+
+  TEST_ASSERT_EQUAL(127, c.red);
+  TEST_ASSERT_EQUAL(5, c.green);
+  TEST_ASSERT_EQUAL(130, c.blue);
+}
+
 void initAndWaitForSerial(){
   Serial.begin(BAUD_RATE);
   delay(2000);
@@ -81,6 +97,7 @@ void run_tests(){
   RUN_TEST(validateJsonReturnsErrorMessageIfGreenIsMissing);
   RUN_TEST(validateJsonReturnsErrorMessageIfRedIsAString);
   RUN_TEST(validateJsonReturnsErrorMessageIfRedIs256);
+  RUN_TEST(importJson);
   UNITY_END();
 }
 

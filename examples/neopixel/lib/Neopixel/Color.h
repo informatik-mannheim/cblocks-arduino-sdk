@@ -16,6 +16,7 @@ namespace Neopixel{
     uint8_t green;
     uint8_t blue;
     JsonObject& toJson();
+    void importJson(JsonObject& json);
     static bool isValidJson(JsonObject& json);
     static String validateJson(JsonObject& json);
   };
@@ -73,6 +74,14 @@ namespace Neopixel{
     }
 
     return result;
+  }
+
+  void Color::importJson(JsonObject &json){
+    if(isValidJson(json)){
+      this->red = json["red"];
+      this->green = json["green"];
+      this->blue = json["blue"];
+    }
   }
 }
 
