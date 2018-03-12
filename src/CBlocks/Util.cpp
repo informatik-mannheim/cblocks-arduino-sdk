@@ -23,7 +23,7 @@ String Util::getOutputTopic(unsigned int objectID, unsigned instanceID, int reso
 }
 
 String Util::getInputTopic(unsigned int objectID, unsigned instanceID, int resourceID){
-  String topic("+");
+  String topic("internal/+");
   topic.concat("/");
   topic.concat(objectID);
   topic.concat("/");
@@ -116,15 +116,19 @@ String Util::getResponseTopic(String clientID){
 }
 
 String Util::getClientIDFromCommandTopic(String topic){
-  int indexOfFirstTopicSeperator= topic.indexOf('/');
-  return topic.substring(0, indexOfFirstTopicSeperator);
+  int indexOfFirstTopicSeperator = topic.indexOf('/');
+  int indexOfSecondTopicSeperator = topic.indexOf('/', indexOfFirstTopicSeperator+1);
+
+  return topic.substring(indexOfFirstTopicSeperator+1, indexOfSecondTopicSeperator);
 }
 
 String Util::removeClientIDFromCommandTopic(String topic){
-  int indexOfFirstTopicSeperator= topic.indexOf('/');
-  String clientIndependentTopic("+/");
+  int indexOfFirstTopicSeperator = topic.indexOf('/');
+  int indexOfSecondTopicSeperator = topic.indexOf('/', indexOfFirstTopicSeperator+1);
 
-  clientIndependentTopic.concat(topic.substring(indexOfFirstTopicSeperator+1));
+  String clientIndependentTopic("internal/+/");
+
+  clientIndependentTopic.concat(topic.substring(indexOfSecondTopicSeperator+1));
 
   return clientIndependentTopic;
 }

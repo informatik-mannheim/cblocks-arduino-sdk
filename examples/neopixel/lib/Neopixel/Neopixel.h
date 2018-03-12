@@ -53,14 +53,10 @@ namespace Neopixel{
   }
 
   CommandResponse Neopixel::isOnCommandCallback(JsonObject &json){
-    if(json.is<bool>("data")){
-      isOn = json["data"];
-      renderPixels();
+    isOn = json["data"];
+    renderPixels();
 
-      return CommandResponse::getSuccessCommandResponseFor(json["requestID"]);
-    }
-
-    return CommandResponse::getErrorCommandResponseFor(json["requestID"], "Data must be of type bool.");
+    return CommandResponse::getSuccessCommandResponseFor(json["requestID"]);
   }
 
   void Neopixel::renderPixels(){
@@ -85,20 +81,12 @@ namespace Neopixel{
   }
 
   CommandResponse Neopixel::colorCommandCallback(JsonObject &json){
-    if(json.is<JsonObject>("data")){
-      JsonObject& data = json["data"];
+    JsonObject& data = json["data"];
 
-      if(Color::isValidJson(data)){
-        color->importJson(data);
-        renderPixels();
+    color->importJson(data);
+    renderPixels();
 
-        return CommandResponse::getSuccessCommandResponseFor(json["requestID"]);
-      }
-
-      return CommandResponse::getErrorCommandResponseFor(json["requestID"], Color::validateJson(data));
-    }
-
-    return CommandResponse::getErrorCommandResponseFor(json["requestID"], "Data must be a JSON object.");
+    return CommandResponse::getSuccessCommandResponseFor(json["requestID"]);
   }
 }
 

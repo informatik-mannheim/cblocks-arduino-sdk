@@ -17,7 +17,7 @@ void getOutputTopic() {
 }
 
 void getInputTopic() {
-  TEST_ASSERT_EQUAL_STRING("+/3303/0/1/input", Util::getInputTopic(3303, 0, 1).c_str());
+  TEST_ASSERT_EQUAL_STRING("internal/+/3303/0/1/input", Util::getInputTopic(3303, 0, 1).c_str());
 }
 
 void getNamedTopic() {
@@ -124,11 +124,11 @@ void getResponseTopic(){
 }
 
 void getClientIDFromCommandTopic(){
-  TEST_ASSERT_EQUAL_STRING("mqttFX", Util::getClientIDFromCommandTopic(String("mqttFX/3303/0/0/input")).c_str());
+  TEST_ASSERT_EQUAL_STRING("mqttFX", Util::getClientIDFromCommandTopic(String("internal/mqttFX/3303/0/0/input")).c_str());
 }
 
 void removeClientIDFromCommandTopic(){
-  TEST_ASSERT_EQUAL_STRING("+/3303/0/0/input", Util::removeClientIDFromCommandTopic(String("mqttFX/3303/0/0/input")).c_str());
+  TEST_ASSERT_EQUAL_STRING("internal/+/3303/0/0/input", Util::removeClientIDFromCommandTopic(String("internal/mqttFX/3303/0/0/input")).c_str());
 }
 
 void commandResponseToJSON(){
