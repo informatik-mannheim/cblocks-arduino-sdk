@@ -27,3 +27,6 @@ neopixel_run:
 
 neopixel_test:
 	pio run -d examples/neopixel/tests -t upload; pio device monitor -b 115200
+
+rfid_run:
+	pio run -e feather -d examples/rfid/src -t upload; pio device monitor -b 115200
