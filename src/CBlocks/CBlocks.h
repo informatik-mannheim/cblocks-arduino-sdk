@@ -18,6 +18,7 @@ public:
   CBlocks(unsigned int objectID, unsigned int instanceID, Network* network);
 
   void begin();
+  void updateResource(unsigned int resourceID, String value);
   void updateResource(unsigned int resourceID, unsigned int value);
   void updateResource(unsigned int resourceID, float value);
   void updateResource(unsigned int resourceID, bool value);

@@ -11,6 +11,10 @@ void CBlocks::begin(){
   network->init();
 }
 
+void CBlocks::updateResource(unsigned int resourceID, String value){
+  network->publish(getOutputTopicFor(resourceID), value);
+}
+
 void CBlocks::updateResource(unsigned int resourceID, unsigned int value){
   network->publish(getOutputTopicFor(resourceID), Util::getPayloadFor(value));
 }
