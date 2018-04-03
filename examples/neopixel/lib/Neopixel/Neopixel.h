@@ -48,6 +48,7 @@ namespace Neopixel{
   }
 
   void Neopixel::publishStatus(){
+    cblocks->heartBeat();
     cblocks->updateResource(IS_ON_RESOURCE_ID, isOn);
     cblocks->updateResource(COLOR_RESOURCE_ID, color->toJson());
   }
