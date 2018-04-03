@@ -11,6 +11,10 @@ void CBlocks::begin(){
   network->init();
 }
 
+void CBlocks::heartBeat(){
+  network->keepOnline();
+}
+
 void CBlocks::updateResource(unsigned int resourceID, String value){
   network->publish(getOutputTopicFor(resourceID), value);
 }

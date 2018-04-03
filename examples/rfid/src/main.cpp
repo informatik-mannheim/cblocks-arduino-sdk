@@ -25,7 +25,6 @@ RFID::CardReader* cardReader;
 MFRC522 mfrc522(SS_PIN, RST_PIN);
 
 const int TEMP_PIN = A0;
-const unsigned int UPDATE_INTERVAL_IN_MS = 10;
 
 void initAndWaitForSerial(){
   Serial.begin(BAUD_RATE);
@@ -72,6 +71,5 @@ void setup(){
 }
 
 void loop(){
-  delay(UPDATE_INTERVAL_IN_MS);
   cardReader->publishStatus();
 }

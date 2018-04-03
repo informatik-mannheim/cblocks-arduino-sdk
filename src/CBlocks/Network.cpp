@@ -137,3 +137,7 @@ void Network::addSubscription(String topic, commandCallback cb){
 void Network::subscribe(String topic){
   mqtt.client->subscribe(topic.c_str());
 }
+
+void Network::keepOnline(){
+  this->ensureConnected();
+}

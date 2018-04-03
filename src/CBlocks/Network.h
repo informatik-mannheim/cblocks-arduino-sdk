@@ -54,6 +54,7 @@ private:
 public:
   Network(String clientID, MQTT mqtt, Will firstWill, Will lastWill);
   void init();
+  void keepOnline();
   static void publish(String topic, String payload);
   void subscribe(String topic, commandCallback cb);
 };
