@@ -18,9 +18,8 @@
 #define PIXEL_PIN 2
 #define STATUS_RED_PIN 15
 #define STATUS_GREEN_PIN 13
-
-const char* ssid = "cblocks-gateway";
-const char* password = "naeheaufdistanz";
+#define SSID "cblocks-gateway"
+#define PASSWORD "naeheaufdistanz"
 
 WiFiClient wifiClient;
 PubSubClient mqttClient(wifiClient);
@@ -29,13 +28,12 @@ CBlocks::CBlocks* cblocks;
 CBlocks::Neopixel* neopixel;
 Adafruit_NeoPixel* strip = new Adafruit_NeoPixel(NUMBER_OF_PIXELS, PIXEL_PIN);
 CBlocks::StatusLED* statusLED = new CBlocks::StatusLED(STATUS_RED_PIN, STATUS_GREEN_PIN);
-CBlocks::Link* link = new CBlocks::WiFiLink(ssid, password);
+CBlocks::Link* link = new CBlocks::WiFiLink(SSID, PASSWORD);
 
 const unsigned int UPDATE_INTERVAL_IN_MS = 500;
 
 void initAndWaitForSerial(){
   Serial.begin(BAUD_RATE);
-  delay(2000);
 }
 
 void init_cblocks(){
