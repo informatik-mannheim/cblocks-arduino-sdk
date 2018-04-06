@@ -2,8 +2,11 @@
 #define CBLOCKS_MAKER_H
 
 #include "CBlocks.h"
-#include "Network.h"
+#include "StatusLED.h"
+#include "Link.h"
 
-CBlocks* makeMQTT(unsigned int objectID, unsigned int instanceID, MQTT mqtt);
+namespace CBlocks{
+  CBlocks* makeMQTT(unsigned int objectID, unsigned int instanceID, Link* link, MQTT mqtt, StatusLED* statusLED);
+}
 
 #endif

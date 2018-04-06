@@ -3,7 +3,7 @@
 
 #include "ArduinoJson.h"
 
-namespace Neopixel{
+namespace CBlocks{
   class Color{
   private:
     StaticJsonBuffer<100> buffer;

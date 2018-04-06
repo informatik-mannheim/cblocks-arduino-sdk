@@ -10,7 +10,7 @@
 #define IS_ON_RESOURCE_ID 0
 #define COLOR_RESOURCE_ID 1
 
-namespace Neopixel{
+namespace CBlocks{
   class Neopixel{
   private:
     static bool isOn;

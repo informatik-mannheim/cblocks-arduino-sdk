@@ -2,28 +2,30 @@
 #include "Arduino.h"
 #include "ArduinoJson.h"
 
-String CommandResponse::toJSON(DynamicJsonBuffer& buffer){
-  JsonObject& o = buffer.createObject();
+namespace CBlocks{
+  String CommandResponse::toJSON(DynamicJsonBuffer& buffer){
+    JsonObject& o = buffer.createObject();
 
-  o["requestID"] = requestID;
-  o["success"] = success;
-  o["message"] = message;
+    o["requestID"] = requestID;
+    o["success"] = success;
+    o["message"] = message;
 
-  String result;
+    String result;
 
-  o.printTo(result);
+    o.printTo(result);
 
-  return result;
-}
+    return result;
+  }
 
-CommandResponse CommandResponse::getSuccessCommandResponseFor(unsigned int requestID){
-  CommandResponse r = {requestID, true, ""};
+  CommandResponse CommandResponse::getSuccessCommandResponseFor(unsigned int requestID){
+    CommandResponse r = {requestID, true, ""};
 
-  return r;
-}
+    return r;
+  }
 
-CommandResponse CommandResponse::getErrorCommandResponseFor(unsigned int requestID, String message){
-  CommandResponse r = {requestID, false, message};
+  CommandResponse CommandResponse::getErrorCommandResponseFor(unsigned int requestID, String message){
+    CommandResponse r = {requestID, false, message};
 
-  return r;
+    return r;
+  }
 }
