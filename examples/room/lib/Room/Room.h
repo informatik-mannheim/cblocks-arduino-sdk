@@ -9,7 +9,7 @@
 #define HUMIDITY_RESOURCE_ID 1
 #define UPDATE_INTERVAL_IN_MS 1000
 
-namespace Room{
+namespace CBlocks{
   class Room{
   private:
     DHT_Unified* dht;

@@ -16,8 +16,8 @@
 #define INSTANCE_ID 0
 #define NUMBER_OF_PIXELS 4
 #define PIXEL_PIN 14
-#define STATUS_RED_PIN 15
-#define STATUS_GREEN_PIN 13
+#define STATUS_RED_PIN 13
+#define STATUS_GREEN_PIN 15
 #define SSID "cblocks-gateway"
 #define PASSWORD "naeheaufdistanz"
 

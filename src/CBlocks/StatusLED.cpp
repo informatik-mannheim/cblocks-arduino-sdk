@@ -8,17 +8,17 @@ namespace CBlocks{
   }
 
   void StatusLED::connecting(){
-    digitalWrite(redPin, HIGH);
-    digitalWrite(greenPin, HIGH);
+    analogWrite(redPin, HIGH_VALUE);
+    analogWrite(greenPin, HIGH_VALUE);
   }
 
   void StatusLED::running(){
-    digitalWrite(redPin, LOW);
-    digitalWrite(greenPin, HIGH);
+    analogWrite(redPin, LOW);
+    analogWrite(greenPin, HIGH_VALUE);
   }
 
   void StatusLED::error(){
-    digitalWrite(redPin, HIGH);
-    digitalWrite(greenPin, LOW);
+    analogWrite(redPin, HIGH_VALUE);
+    analogWrite(greenPin, LOW);
   }
 }

@@ -1,6 +1,8 @@
 #ifndef CBLOCKS_STATUS_LED
 #define CBLOCKS_STATUS_LED
 
+#define HIGH_VALUE 100
+
 namespace CBlocks{
   class StatusLED{
   private:
