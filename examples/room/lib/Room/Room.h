@@ -41,11 +41,11 @@ namespace CBlocks{
 
   void Room::publishStatus(){
     if(this->updateIntervalExceeded()){
-      this->cblocks->heartBeat();
-
       this->publishTemperature();
       this->publishHumidity();
     }
+
+    this->cblocks->heartBeat();
   }
 
   bool Room::updateIntervalExceeded(){
