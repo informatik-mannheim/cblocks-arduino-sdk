@@ -9,7 +9,7 @@
 #define LAST_SUCCESSFULLL_READ_TIMEOUT 500
 #define CARD_PRESENT_RESOURCE_ID 0
 
-namespace RFID{
+namespace CBlocks{
   class CardReader{
   private:
     MFRC522* reader;
