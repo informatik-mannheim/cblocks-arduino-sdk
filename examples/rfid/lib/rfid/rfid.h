@@ -8,6 +8,7 @@
 
 #define LAST_SUCCESSFULLL_READ_TIMEOUT 500
 #define CARD_PRESENT_RESOURCE_ID 0
+#define BUZZ_LENTH_IN_MS 300
 
 namespace CBlocks{
   class CardReader{
@@ -16,34 +17,39 @@ namespace CBlocks{
     CBlocks* cblocks;
     MFRC522::Uid card;
     long lastSuccessfullReadMillis;
+    int buzzerPin;
 
     void readCard();
     void updateCardPresentResource();
     bool newCardPresent();
+    void buzz();
     void resetCard();
     bool isCardPresent();
     bool isReadTimedOut();
   public:
-    CardReader(MFRC522* reader, CBlocks* cblocks);
+    CardReader(MFRC522* reader, CBlocks* cblocks, int buzzerPin);
     void begin();
     void publishStatus();
   };
 
-  CardReader::CardReader(MFRC522* reader, CBlocks* cblocks){
+  CardReader::CardReader(MFRC522* reader, CBlocks* cblocks, int buzzerPin){
     this->reader = reader;
     this->cblocks = cblocks;
     this->lastSuccessfullReadMillis = 0;
+    this->buzzerPin = buzzerPin;
   }
 
   void CardReader::begin(){
     SPI.begin();
     reader->PCD_Init();
+    pinMode(buzzerPin, OUTPUT);
   }
 
   void CardReader::publishStatus(){
     this->cblocks->heartBeat();
 
     if(this->newCardPresent()){
+      this->buzz();
       this->readCard();
       this->updateCardPresentResource();
     }
@@ -85,6 +91,10 @@ namespace CBlocks{
     for (size_t i = 0; i < 10; i++) {
       this->card.uidByte[i] = 0;
     }
+  }
+
+  void CardReader::buzz(){
+    tone(buzzerPin, 800, BUZZ_LENTH_IN_MS);
   }
 
   void CardReader::readCard(){

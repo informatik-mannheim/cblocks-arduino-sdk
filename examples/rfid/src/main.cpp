@@ -10,15 +10,15 @@
 #include "WiFiLink.h"
 
 #define BAUD_RATE 115200
-#define BAUD_RATE 115200
 #define OBJECT_ID 3305
 #define INSTANCE_ID 0
-#define STATUS_RED_PIN 13
+#define STATUS_RED_PIN 0
 #define STATUS_GREEN_PIN 15
 #define SSID "cblocks-gateway"
 #define PASSWORD "naeheaufdistanz"
 #define RST_PIN 4
 #define SS_PIN 5
+#define BUZZER_PIN 2
 
 WiFiClient wifiClient;
 PubSubClient mqttClient(wifiClient);
@@ -40,7 +40,7 @@ void init_cblocks(){
 }
 
 void init_sensor(){
-  cardReader = new CBlocks::CardReader(&mfrc522, cblocks);
+  cardReader = new CBlocks::CardReader(&mfrc522, cblocks, BUZZER_PIN);
   cardReader->begin();
 }
 
