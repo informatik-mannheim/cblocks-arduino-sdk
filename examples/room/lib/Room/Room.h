@@ -4,6 +4,7 @@
 #include "Arduino.h"
 #include "CBlocks.h"
 #include "DHT_U.h"
+#include "UpdateTimer.h"
 
 #define TEMPERATURE_RESOURCE_ID 0
 #define HUMIDITY_RESOURCE_ID 1
@@ -14,11 +15,10 @@ namespace CBlocks{
   private:
     DHT_Unified* dht;
     CBlocks* cblocks;
-    long last_update_in_ms;
     float temperatureCelsius;
     float relativeHumidity;
+    UpdateTimer* updateTimer;
 
-    bool updateIntervalExceeded();
     void publishTemperature();
     void readTemperature();
     void publishHumidity();
@@ -33,6 +33,7 @@ namespace CBlocks{
   Room::Room(DHT_Unified* dht, CBlocks* cblocks){
     this->dht = dht;
     this->cblocks = cblocks;
+    this->updateTimer = new UpdateTimer(UPDATE_INTERVAL_IN_MS);
   }
 
   void Room::begin(){
@@ -40,21 +41,12 @@ namespace CBlocks{
   }
 
   void Room::publishStatus(){
-    if(this->updateIntervalExceeded()){
+    if(updateTimer->updateIntervalExceeded()){
       this->publishTemperature();
       this->publishHumidity();
     }
 
     this->cblocks->heartBeat();
-  }
-
-  bool Room::updateIntervalExceeded(){
-    if(millis() - this->last_update_in_ms > UPDATE_INTERVAL_IN_MS){
-      this->last_update_in_ms = millis();
-      return true;
-    }
-
-    return false;
   }
 
   void Room::publishTemperature(){

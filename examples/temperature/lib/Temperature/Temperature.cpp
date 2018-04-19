@@ -1,10 +1,12 @@
 #include "Arduino.h"
 #include "Temperature.h"
 #include "TemperatureUtil.h"
+#include "UpdateTimer.h"
 
 Temperature::Temperature(int analogPin, CBlocks* cblocks){
   this->analogPin = analogPin;
   this->cblocks = cblocks;
+  this->updateTimer = new UpdateTimer(UPDATE_INTERVAL_IN_MS);
 }
 
 void Temperature::begin(){

@@ -5,10 +5,12 @@
 #include "CBlocks.h"
 #include "Command.h"
 #include "Color.h"
+#include "UpdateTimer.h"
 #include <Adafruit_NeoPixel.h>
 
 #define IS_ON_RESOURCE_ID 0
 #define COLOR_RESOURCE_ID 1
+#define UPDATE_INTERVAL_IN_MS 1000
 
 namespace CBlocks{
   class Neopixel{
@@ -18,6 +20,7 @@ namespace CBlocks{
 
     static Adafruit_NeoPixel* strip;
     CBlocks* cblocks;
+    UpdateTimer* updateTimer;
 
     static void renderPixels();
     static void renderPixelsWithColor();
@@ -38,6 +41,7 @@ namespace CBlocks{
   Neopixel::Neopixel(Adafruit_NeoPixel* strip, CBlocks* cblocks){
     this->strip = strip;
     this->cblocks = cblocks;
+    this->updateTimer = new UpdateTimer(UPDATE_INTERVAL_IN_MS);
   }
 
   void Neopixel::begin(){
@@ -49,8 +53,11 @@ namespace CBlocks{
 
   void Neopixel::publishStatus(){
     cblocks->heartBeat();
-    cblocks->updateResource(IS_ON_RESOURCE_ID, isOn);
-    cblocks->updateResource(COLOR_RESOURCE_ID, color->toJson());
+
+    if(updateTimer->updateIntervalExceeded()){
+      cblocks->updateResource(IS_ON_RESOURCE_ID, isOn);
+      cblocks->updateResource(COLOR_RESOURCE_ID, color->toJson());
+    }
   }
 
   CommandResponse Neopixel::isOnCommandCallback(JsonObject &json){

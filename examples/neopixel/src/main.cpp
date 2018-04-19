@@ -30,8 +30,6 @@ Adafruit_NeoPixel* strip = new Adafruit_NeoPixel(NUMBER_OF_PIXELS, PIXEL_PIN);
 CBlocks::StatusLED* statusLED = new CBlocks::StatusLED(STATUS_RED_PIN, STATUS_GREEN_PIN);
 CBlocks::Link* link = new CBlocks::WiFiLink(SSID, PASSWORD);
 
-const unsigned int UPDATE_INTERVAL_IN_MS = 500;
-
 void initAndWaitForSerial(){
   Serial.begin(BAUD_RATE);
 }
@@ -53,6 +51,5 @@ void setup(){
 }
 
 void loop(){
-  delay(UPDATE_INTERVAL_IN_MS);
   neopixel->publishStatus();
 }
