@@ -32,7 +32,6 @@ CBlocks::Room* roomSensor;
 
 void initAndWaitForSerial(){
   Serial.begin(BAUD_RATE);
-  delay(2000);
 }
 
 void init_cblocks(){
