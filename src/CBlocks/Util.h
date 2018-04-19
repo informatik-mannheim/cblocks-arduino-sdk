@@ -13,6 +13,7 @@ namespace CBlocks{
     static String getInputTopic(unsigned int objectID, unsigned instanceID, int resourceID);
     static String getNamedTopic(unsigned int objectID, unsigned instanceID, String resourceName);
     static String getPayloadFor(unsigned int value);
+    static String getPayloadFor(bool value);
     static String getPayloadFor(float value);
     static String getPayloadFor(JsonObject& data);
     static Will getLastWillFor(unsigned int objectID, unsigned instanceID);

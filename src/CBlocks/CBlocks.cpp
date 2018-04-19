@@ -33,7 +33,7 @@ namespace CBlocks{
   }
 
   void CBlocks::updateResource(unsigned int resourceID, bool value){
-    updateResource(resourceID, (unsigned int)value);
+    network->publish(getOutputTopicFor(resourceID), Util::getPayloadFor(value));
   }
 
   void CBlocks::updateResource(unsigned int resourceID, JsonObject& value){

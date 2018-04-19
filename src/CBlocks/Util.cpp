@@ -55,6 +55,14 @@ namespace CBlocks{
     return String(value);
   }
 
+  String Util::getPayloadFor(bool value){
+    if(value){
+      return "true";
+    }
+
+    return "false";
+  }
+
   String Util::getPayloadFor(JsonObject& data){
     String payload;
     data.printTo(payload);
