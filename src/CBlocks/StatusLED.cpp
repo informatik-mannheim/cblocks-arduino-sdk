@@ -1,24 +1,24 @@
 #include "StatusLED.h"
 #include "Arduino.h"
 
+#include <Adafruit_NeoPixel.h>
+
 namespace CBlocks{
-  StatusLED::StatusLED(int redPin, int greenPin) : redPin(redPin), greenPin(greenPin){
-    pinMode(redPin, OUTPUT);
-    pinMode(greenPin, OUTPUT);
+  StatusLED::StatusLED(Adafruit_NeoPixel* strip, int statusPixel) : strip(strip), statusPixel(statusPixel){
   }
 
   void StatusLED::connecting(){
-    analogWrite(redPin, HIGH_VALUE);
-    analogWrite(greenPin, HIGH_VALUE);
+    strip->setPixelColor(statusPixel, strip->Color(HIGH_VALUE, HIGH_VALUE, 0));
+    strip->show();
   }
 
   void StatusLED::running(){
-    analogWrite(redPin, LOW);
-    analogWrite(greenPin, HIGH_VALUE);
+    strip->setPixelColor(statusPixel, strip->Color(HIGH_VALUE, 0, 0));
+    strip->show();
   }
 
   void StatusLED::error(){
-    analogWrite(redPin, HIGH_VALUE);
-    analogWrite(greenPin, LOW);
+    strip->setPixelColor(statusPixel, strip->Color(0, HIGH_VALUE, 0));
+    strip->show();
   }
 }

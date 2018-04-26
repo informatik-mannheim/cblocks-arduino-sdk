@@ -14,6 +14,7 @@ namespace CBlocks{
     Will firstWill = Util::getFirstWillFor(objectID, instanceID);
     Will lastWill = Util::getLastWillFor(objectID, instanceID);
 
+    mqtt.client->disconnect();
     Network* network = new Network(link, statusLED, clientID, mqtt, firstWill, lastWill);
 
     return new CBlocks(objectID, instanceID, network);

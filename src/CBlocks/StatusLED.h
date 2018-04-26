@@ -1,16 +1,18 @@
 #ifndef CBLOCKS_STATUS_LED
 #define CBLOCKS_STATUS_LED
 
-#define HIGH_VALUE 100
+#define HIGH_VALUE 25
+
+#include <Adafruit_NeoPixel.h>
 
 namespace CBlocks{
   class StatusLED{
   private:
-    int redPin;
-    int greenPin;
+    Adafruit_NeoPixel* strip;
+    int statusPixel;
 
   public:
-    StatusLED(int redPin, int greenPin);
+    StatusLED(Adafruit_NeoPixel* strip, int statusPixel);
     void connecting();
     void running();
     void error();

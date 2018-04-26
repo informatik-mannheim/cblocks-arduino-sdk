@@ -18,6 +18,7 @@ namespace CBlocks{
     static bool isOn;
     static Color* color;
 
+    static int pixelOffset;
     static Adafruit_NeoPixel* strip;
     CBlocks* cblocks;
     UpdateTimer* updateTimer;
@@ -26,7 +27,7 @@ namespace CBlocks{
     static void renderPixelsWithColor();
     static void switchPixelsOff();
   public:
-    Neopixel(Adafruit_NeoPixel* strip, CBlocks* cblocks);
+    Neopixel(Adafruit_NeoPixel* strip, CBlocks* cblocks, int pixelOffset);
     void begin();
     void publishStatus();
 
@@ -35,17 +36,18 @@ namespace CBlocks{
   };
 
   bool Neopixel::isOn = true;
-  Color* Neopixel::color = new Color(125,125,125);
+  Color* Neopixel::color = new Color(50,50,50);
   Adafruit_NeoPixel* Neopixel::strip = {0};
+  int Neopixel::pixelOffset = 0;
 
-  Neopixel::Neopixel(Adafruit_NeoPixel* strip, CBlocks* cblocks){
+  Neopixel::Neopixel(Adafruit_NeoPixel* strip, CBlocks* cblocks, int pixelOffset){
     this->strip = strip;
     this->cblocks = cblocks;
+    this->pixelOffset = pixelOffset;
     this->updateTimer = new UpdateTimer(UPDATE_INTERVAL_IN_MS);
   }
 
   void Neopixel::begin(){
-    strip->begin();
     renderPixels();
     cblocks->registerCommand(IS_ON_RESOURCE_ID, isOnCommandCallback);
     cblocks->registerCommand(COLOR_RESOURCE_ID, colorCommandCallback);
@@ -77,13 +79,13 @@ namespace CBlocks{
   }
 
   void Neopixel::renderPixelsWithColor(){
-    for(int i=0;i<strip->numPixels();i++){
-      strip->setPixelColor(i, strip->Color(color->red, color->green, color->blue));
+    for(int i=pixelOffset;i<strip->numPixels();i++){
+      strip->setPixelColor(i, strip->Color(color->green, color->red, color->blue));
     }
   }
 
   void Neopixel::switchPixelsOff(){
-    for(int i=0;i<strip->numPixels();i++){
+    for(int i=pixelOffset;i<strip->numPixels();i++){
       strip->setPixelColor(i, strip->Color(0, 0, 0));
     }
   }
