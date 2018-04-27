@@ -13,11 +13,11 @@
 
 #define BAUD_RATE 115200
 #define OBJECT_ID 3304
-#define INSTANCE_ID 0
+#define INSTANCE_ID 1
 #define NUMBER_OF_PIXELS 4
 #define PIXEL_PIN 2
-#define STATUS_PIXEL 0
-#define NEOPIXEL_OFFSET 1
+#define STATUS_PIXEL 1
+#define NUMBER_OF_NEOPIXELS 1
 #define SSID "cblocks-gateway"
 #define PASSWORD "naeheaufdistanz"
 
@@ -40,7 +40,7 @@ void init_cblocks(){
 }
 
 void init_sensor(){
-  neopixel = new CBlocks::Neopixel(strip, cblocks, NEOPIXEL_OFFSET);
+  neopixel = new CBlocks::Neopixel(strip, cblocks, NUMBER_OF_NEOPIXELS);
   neopixel->begin();
 }
 

@@ -18,7 +18,7 @@ namespace CBlocks{
     static bool isOn;
     static Color* color;
 
-    static int pixelOffset;
+    static int numberOfPixels;
     static Adafruit_NeoPixel* strip;
     CBlocks* cblocks;
     UpdateTimer* updateTimer;
@@ -27,7 +27,7 @@ namespace CBlocks{
     static void renderPixelsWithColor();
     static void switchPixelsOff();
   public:
-    Neopixel(Adafruit_NeoPixel* strip, CBlocks* cblocks, int pixelOffset);
+    Neopixel(Adafruit_NeoPixel* strip, CBlocks* cblocks, int numberOfPixels);
     void begin();
     void publishStatus();
 
@@ -38,12 +38,12 @@ namespace CBlocks{
   bool Neopixel::isOn = true;
   Color* Neopixel::color = new Color(50,50,50);
   Adafruit_NeoPixel* Neopixel::strip = {0};
-  int Neopixel::pixelOffset = 0;
+  int Neopixel::numberOfPixels = 0;
 
-  Neopixel::Neopixel(Adafruit_NeoPixel* strip, CBlocks* cblocks, int pixelOffset){
+  Neopixel::Neopixel(Adafruit_NeoPixel* strip, CBlocks* cblocks, int numberOfPixels){
     this->strip = strip;
     this->cblocks = cblocks;
-    this->pixelOffset = pixelOffset;
+    this->numberOfPixels = numberOfPixels;
     this->updateTimer = new UpdateTimer(UPDATE_INTERVAL_IN_MS);
   }
 
@@ -79,13 +79,13 @@ namespace CBlocks{
   }
 
   void Neopixel::renderPixelsWithColor(){
-    for(int i=pixelOffset;i<strip->numPixels();i++){
+    for(int i=0;i<numberOfPixels;i++){
       strip->setPixelColor(i, strip->Color(color->green, color->red, color->blue));
     }
   }
 
   void Neopixel::switchPixelsOff(){
-    for(int i=pixelOffset;i<strip->numPixels();i++){
+    for(int i=0;i<numberOfPixels;i++){
       strip->setPixelColor(i, strip->Color(0, 0, 0));
     }
   }
