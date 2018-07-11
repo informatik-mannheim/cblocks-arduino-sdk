@@ -28,7 +28,8 @@ CBlocks::CBlocks* cblocks;
 CBlocks::Neopixel* neopixel;
 Adafruit_NeoPixel* strip = new Adafruit_NeoPixel(NUMBER_OF_PIXELS, PIXEL_PIN, NEO_GRB + NEO_KHZ800);
 CBlocks::StatusLED* statusLED = new CBlocks::StatusLED(strip, STATUS_PIXEL);
-CBlocks::Link* link = new CBlocks::WiFiLink(SSID, PASSWORD);
+CBlocks::Pairing* pairing = new CBlocks::Pairing();
+CBlocks::Link* link = new CBlocks::WiFiLink(pairing);
 
 void initAndWaitForSerial(){
   Serial.begin(BAUD_RATE);

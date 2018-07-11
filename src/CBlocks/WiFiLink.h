@@ -4,14 +4,15 @@
 #include "Link.h"
 #include "Arduino.h"
 #include "StatusLED.h"
+#include "Pairing.h"
 
 namespace CBlocks{
   class WiFiLink: public Link{
   private:
-    String ssid;
-    String password;
+    Credentials credentials;
+    Pairing* pairing;
   public:
-    WiFiLink(String ssid, String password);
+    WiFiLink(Pairing* pairing);
     virtual void connect();
   };
 }

@@ -1,19 +1,28 @@
 #include "ESP8266WiFi.h"
 #include "Arduino.h"
 #include "WiFiLink.h"
+#include "Pairing.h"
 
 namespace CBlocks{
-  WiFiLink::WiFiLink(String ssid, String password){
-    this->ssid = ssid;
-    this->password = password;
+  WiFiLink::WiFiLink(Pairing* pairing){
+    this->pairing = pairing;
   }
 
   void WiFiLink::connect(){
+    if(!pairing->isPaired()){
+      // TODO pairing has to be done explicitly
+      pairing->pair();
+
+      this->credentials = pairing->getCredentials();
+    }
+
     Serial.println();
     Serial.print("Connecting to ");
-    Serial.println(ssid);
+    Serial.println(credentials.ssid);
+    Serial.print("With password ");
+    Serial.println(credentials.password);
 
-    WiFi.begin(ssid.c_str(), password.c_str());
+    WiFi.begin(credentials.ssid.c_str(), credentials.password.c_str());
 
     while (WiFi.status() != WL_CONNECTED) {
       delay(500);
