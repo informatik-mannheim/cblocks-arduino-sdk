@@ -4,6 +4,8 @@
 #include "Arduino.h"
 #include "Network.h"
 #include "Command.h"
+#include "PowerManager.h"
+
 namespace CBlocks{
   class CBlocks
   {
@@ -11,11 +13,12 @@ namespace CBlocks{
     unsigned int objectID;
     unsigned int instanceID;
     Network* network;
+    PowerManager* powerManager;
 
     String getOutputTopicFor(unsigned int resourceID);
     String getInputTopicFor(unsigned int resourceID);
   public:
-    CBlocks(unsigned int objectID, unsigned int instanceID, Network* network);
+    CBlocks(unsigned int objectID, unsigned int instanceID, Network* network, PowerManager* powerManager);
 
     void begin();
     void heartBeat();

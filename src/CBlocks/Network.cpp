@@ -127,6 +127,11 @@ namespace CBlocks{
     mqtt.client->publish(firstWill.topic.c_str(), firstWill.message.c_str(), true);
   }
 
+  void Network::publishLastWill(){
+    ensureConnected();
+    mqtt.client->publish(lastWill.topic.c_str(), lastWill.message.c_str(), true);
+  }
+
   void Network::publish(String topic, String payload){
     ensureConnected();
     mqtt.client->publish(topic.c_str(), payload.c_str());
@@ -152,5 +157,12 @@ namespace CBlocks{
 
   void Network::keepOnline(){
     this->ensureConnected();
+  }
+
+  void Network::disconnect(){
+    publishLastWill();
+    mqtt.client->disconnect();
+    Serial.println("Disconnected from Network");
+    delay(20);
   }
 }

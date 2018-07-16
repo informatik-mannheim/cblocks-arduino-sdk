@@ -1,9 +1,10 @@
-#include "ESP8266WiFi.h"
+#include "WiFi.h"
 #include "Arduino.h"
 #include "WiFiLink.h"
 #include "Pairing.h"
 
 namespace CBlocks{
+  // TODO inject wifi client
   WiFiLink::WiFiLink(Pairing* pairing){
     this->pairing = pairing;
   }

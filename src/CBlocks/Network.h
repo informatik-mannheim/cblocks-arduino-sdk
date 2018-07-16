@@ -46,6 +46,7 @@ namespace CBlocks{
     static void ensureConnected();
     static bool connectIsSuccessfull();
     void publishFirstWill();
+    void publishLastWill();
     void addSubscription(String topic, commandCallback cb);
     void subscribe(String topic);
     static void subscriptionCallback(char* topic, byte* payload, unsigned int length);
@@ -63,6 +64,7 @@ namespace CBlocks{
     void keepOnline();
     static void publish(String topic, String payload);
     void subscribe(String topic, commandCallback cb);
+    void disconnect();
   };
 }
 

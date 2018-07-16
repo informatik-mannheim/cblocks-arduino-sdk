@@ -2,10 +2,11 @@
 #include "Util.h"
 
 namespace CBlocks{
-  CBlocks::CBlocks(unsigned int objectID, unsigned int instanceID, Network* network){
+  CBlocks::CBlocks(unsigned int objectID, unsigned int instanceID, Network* network, PowerManager* powerManager){
     this->objectID = objectID;
     this->instanceID = instanceID;
     this->network = network;
+    this->powerManager = powerManager;
   }
 
   void CBlocks::begin(){
@@ -13,7 +14,12 @@ namespace CBlocks{
   }
 
   void CBlocks::heartBeat(){
-    network->keepOnline();
+    if(!powerManager->isPowerButtonOn()){
+      network->disconnect();
+      powerManager->turnOff();
+    }else{
+      network->keepOnline();
+    }
   }
 
   void CBlocks::updateResource(unsigned int resourceID, String value){
