@@ -2,14 +2,17 @@
 #include "ESP32PowerManager.h"
 
 namespace CBlocks{
-  ESP32PowerManager::ESP32PowerManager(int powerPin, gpio_num_t wakeUpPin, int pixelPin)
+  ESP32PowerManager::ESP32PowerManager(int powerPin, gpio_num_t wakeUpPin, int pixelPin, int batteryStatusPin)
     : powerPin(powerPin),
       wakeUpPin(wakeUpPin),
-      pixelPin(pixelPin) {};
+      pixelPin(pixelPin),
+      batteryStatusPin(batteryStatusPin),
+      batteryVoltage(4.7) {};
 
   void ESP32PowerManager::begin(){
     pinMode(powerPin, OUTPUT);
     pinMode(wakeUpPin, INPUT_PULLUP);
+    pinMode(batteryStatusPin, INPUT);
 
     esp_sleep_enable_ext0_wakeup(wakeUpPin, LOW);
     turnOn();
@@ -17,6 +20,16 @@ namespace CBlocks{
 
   bool ESP32PowerManager::isPowerButtonOn(){
     return !digitalRead(wakeUpPin);
+  }
+
+  bool ESP32PowerManager::isBatteryLow(){
+    readBatteryVoltage();
+
+    return batteryVoltage < BATTERY_SHUT_DOWN_THRESHOLD_V;
+  }
+
+  void ESP32PowerManager::readBatteryVoltage(){
+    batteryVoltage = analogRead(batteryStatusPin) * (3.3f / 4096) * 2;
   }
 
   void ESP32PowerManager::turnOff(){
@@ -31,5 +44,22 @@ namespace CBlocks{
 
   void ESP32PowerManager::turnOn(){
     digitalWrite(powerPin, HIGH);
+  }
+
+  float ESP32PowerManager::getBatteryVoltage(){
+    readBatteryVoltage();
+    return batteryVoltage;
+  }
+
+  BatteryStatus ESP32PowerManager::getBatteryStatus(){
+    readBatteryVoltage();
+
+    if(batteryVoltage > BATTERY_HIGH_THRESHOLD){
+      return high;
+    }else if(batteryVoltage > BATTERY_MEDIUM_THRESHOLD){
+      return medium;
+    }
+
+    return low;
   }
 }

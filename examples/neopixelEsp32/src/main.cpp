@@ -21,6 +21,7 @@
 #define NUMBER_OF_NEOPIXELS 1
 #define POWER_PIN 32
 #define WAKE_UP_PIN GPIO_NUM_33
+#define BATTERY_STATUS_PIN A3
 
 WiFiClient wifiClient;
 PubSubClient mqttClient(wifiClient);
@@ -31,7 +32,7 @@ Adafruit_NeoPixel* strip = new Adafruit_NeoPixel(NUMBER_OF_PIXELS, PIXEL_PIN, NE
 CBlocks::StatusLED* statusLED = new CBlocks::StatusLED(strip, STATUS_PIXEL);
 CBlocks::Pairing* pairing = new CBlocks::Pairing();
 CBlocks::Link* link1 = new CBlocks::WiFiLink(pairing);
-CBlocks::PowerManager* powerManager = new CBlocks::ESP32PowerManager(POWER_PIN, WAKE_UP_PIN, PIXEL_PIN);
+CBlocks::PowerManager* powerManager = new CBlocks::ESP32PowerManager(POWER_PIN, WAKE_UP_PIN, PIXEL_PIN, BATTERY_STATUS_PIN);
 
 void initAndWaitForSerial(){
   Serial.begin(BAUD_RATE);

@@ -1,5 +1,6 @@
 #include "CBlocks.h"
 #include "Util.h"
+#include "UpdateTimer.h"
 
 namespace CBlocks{
   CBlocks::CBlocks(unsigned int objectID, unsigned int instanceID, Network* network, PowerManager* powerManager){
@@ -7,6 +8,7 @@ namespace CBlocks{
     this->instanceID = instanceID;
     this->network = network;
     this->powerManager = powerManager;
+    this->batteryStatusUpdateTimer = new UpdateTimer(BATTERY_STATUS_UPDATE_INTERVAL_MS);
   }
 
   void CBlocks::begin(){
@@ -14,11 +16,19 @@ namespace CBlocks{
   }
 
   void CBlocks::heartBeat(){
-    if(!powerManager->isPowerButtonOn()){
+    publishBatteryStatus();
+
+    if(!powerManager->isPowerButtonOn() || powerManager->isBatteryLow()){
       network->disconnect();
       powerManager->turnOff();
     }else{
       network->keepOnline();
+    }
+  }
+
+  void CBlocks::publishBatteryStatus(){
+    if(batteryStatusUpdateTimer->updateIntervalExceeded()){
+      updateResource(BATTERY_STATUS_RESOURCE_ID, (unsigned int)powerManager->getBatteryStatus());
     }
   }
 

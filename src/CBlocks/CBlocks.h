@@ -5,6 +5,10 @@
 #include "Network.h"
 #include "Command.h"
 #include "PowerManager.h"
+#include "UpdateTimer.h"
+
+#define BATTERY_STATUS_RESOURCE_ID 255
+#define BATTERY_STATUS_UPDATE_INTERVAL_MS 5000
 
 namespace CBlocks{
   class CBlocks
@@ -14,7 +18,9 @@ namespace CBlocks{
     unsigned int instanceID;
     Network* network;
     PowerManager* powerManager;
+    UpdateTimer* batteryStatusUpdateTimer;
 
+    void publishBatteryStatus();
     String getOutputTopicFor(unsigned int resourceID);
     String getInputTopicFor(unsigned int resourceID);
   public:
