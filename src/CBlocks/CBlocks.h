@@ -6,6 +6,7 @@
 #include "Command.h"
 #include "PowerManager.h"
 #include "UpdateTimer.h"
+#include "AstroMac.h"
 
 #define BATTERY_STATUS_RESOURCE_ID 255
 #define BATTERY_STATUS_UPDATE_INTERVAL_MS 5000
@@ -23,6 +24,7 @@ namespace CBlocks{
     void publishBatteryStatus();
     String getOutputTopicFor(unsigned int resourceID);
     String getInputTopicFor(unsigned int resourceID);
+    bool shouldTurnOff();
   public:
     CBlocks(unsigned int objectID, unsigned int instanceID, Network* network, PowerManager* powerManager);
 

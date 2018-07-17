@@ -31,7 +31,7 @@ CBlocks::Neopixel* neopixel;
 Adafruit_NeoPixel* strip = new Adafruit_NeoPixel(NUMBER_OF_PIXELS, PIXEL_PIN, NEO_GRB + NEO_KHZ800);
 CBlocks::StatusLED* statusLED = new CBlocks::StatusLED(strip, STATUS_PIXEL);
 CBlocks::Pairing* pairing = new CBlocks::Pairing();
-CBlocks::Link* link1 = new CBlocks::WiFiLink(pairing);
+CBlocks::Link* wifiLink = new CBlocks::WiFiLink(pairing); //TODO pairing in cblocks und credentials per methodenaufruf
 CBlocks::PowerManager* powerManager = new CBlocks::ESP32PowerManager(POWER_PIN, WAKE_UP_PIN, PIXEL_PIN, BATTERY_STATUS_PIN);
 
 void initAndWaitForSerial(){
@@ -39,7 +39,7 @@ void initAndWaitForSerial(){
 }
 
 void init_cblocks(){
-  cblocks = CBlocks::makeMQTT(OBJECT_ID, INSTANCE_ID, link1, mqtt, statusLED, powerManager);
+  cblocks = CBlocks::makeMQTT(OBJECT_ID, INSTANCE_ID, wifiLink, mqtt, statusLED, powerManager);
   cblocks->begin();
 }
 

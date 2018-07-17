@@ -12,13 +12,14 @@ namespace CBlocks{
   }
 
   void CBlocks::begin(){
+    powerManager->begin();
     network->init();
   }
 
   void CBlocks::heartBeat(){
     publishBatteryStatus();
 
-    if(!powerManager->isPowerButtonOn() || powerManager->isBatteryLow()){
+    if(shouldTurnOff()){
       network->disconnect();
       powerManager->turnOff();
     }else{
@@ -30,6 +31,10 @@ namespace CBlocks{
     if(batteryStatusUpdateTimer->updateIntervalExceeded()){
       updateResource(BATTERY_STATUS_RESOURCE_ID, (unsigned int)powerManager->getBatteryStatus());
     }
+  }
+
+  bool CBlocks::shouldTurnOff(){
+    return !powerManager->isPowerButtonOn() || powerManager->isBatteryLow();
   }
 
   void CBlocks::updateResource(unsigned int resourceID, String value){
