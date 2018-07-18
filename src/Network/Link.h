@@ -4,7 +4,9 @@
 namespace CBlocks{
   class Link{
   public:
-    virtual void connect();
+    virtual bool connect();
+    virtual bool isConnected();
+    virtual void disconnect();
   };
 }
 

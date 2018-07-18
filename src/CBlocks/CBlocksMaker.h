@@ -5,9 +5,10 @@
 #include "StatusLED.h"
 #include "Link.h"
 #include "PowerManager.h"
+#include "Pairing.h"
 
 namespace CBlocks{
-  CBlocks* makeMQTT(unsigned int objectID, unsigned int instanceID, Link* link, MQTT mqtt, StatusLED* statusLED, PowerManager* powerManager);
+  CBlocks* makeMQTT(unsigned int objectID, unsigned int instanceID, Link* link, MQTT mqtt, StatusLED* statusLED, PowerManager* powerManager, Pairing* pairing);
 }
 
 #endif

@@ -4,8 +4,9 @@
 #include "Decoder.h"
 
 namespace AstroMac{
-  AstroMac::AstroMac(AnalogReadFPT analogReadFP){
+  AstroMac::AstroMac(AnalogReadFPT analogReadFP, int analogPin){
     this->analogReadFP = analogReadFP;
+    this->analogPin = analogPin;
     this->sampling_period_us = round(1000000*(1.0/SAMPLING_FREQUENCY));
     this->fft = arduinoFFT();
     this->lastDataTickInMS = 0;

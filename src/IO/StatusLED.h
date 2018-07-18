@@ -16,6 +16,7 @@ namespace CBlocks{
     void connecting();
     void running();
     void error();
+    void pairing();
   };
 }
 

@@ -34,6 +34,7 @@ namespace AstroMac{
     unsigned long lastSymbolReceivedInMS;
     Decoder *decoder;
     AnalogReadFPT analogReadFP;
+    int analogPin;
 
     void initFrequencies();
     void sample();
@@ -47,7 +48,7 @@ namespace AstroMac{
     uint16_t getAmplitudeForFrequency(uint16_t frequency);
     uint8_t getBinForFrequency(uint16_t frequency);
   public:
-    AstroMac(AnalogReadFPT analogReadFP);
+    AstroMac(AnalogReadFPT analogReadFP, int analogPin);
     String detect();
   };
 }

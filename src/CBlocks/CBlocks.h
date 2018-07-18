@@ -6,12 +6,15 @@
 #include "Command.h"
 #include "PowerManager.h"
 #include "UpdateTimer.h"
-#include "AstroMac.h"
+#include "Pairing.h"
+#include "StatusLED.h"
 
 #define BATTERY_STATUS_RESOURCE_ID 255
 #define BATTERY_STATUS_UPDATE_INTERVAL_MS 5000
 
 namespace CBlocks{
+  enum State { CONNECTION_FAILED, CONNECTED, PAIRING, PAIRED };
+
   class CBlocks
   {
   private:
@@ -20,13 +23,16 @@ namespace CBlocks{
     Network* network;
     PowerManager* powerManager;
     UpdateTimer* batteryStatusUpdateTimer;
+    Pairing* pairing;
+    StatusLED* statusLED;
+    State state;
 
     void publishBatteryStatus();
     String getOutputTopicFor(unsigned int resourceID);
     String getInputTopicFor(unsigned int resourceID);
     bool shouldTurnOff();
   public:
-    CBlocks(unsigned int objectID, unsigned int instanceID, Network* network, PowerManager* powerManager);
+    CBlocks(unsigned int objectID, unsigned int instanceID, Network* network, PowerManager* powerManager, Pairing* pairing, StatusLED* statusLED);
 
     void begin();
     void heartBeat();

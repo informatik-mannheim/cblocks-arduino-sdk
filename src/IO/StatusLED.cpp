@@ -21,4 +21,9 @@ namespace CBlocks{
     strip->setPixelColor(statusPixel, strip->Color(0, HIGH_VALUE, 0));
     strip->show();
   }
+
+  void StatusLED::pairing(){
+    strip->setPixelColor(statusPixel, strip->Color(0, 0, HIGH_VALUE));
+    strip->show();
+  }
 }

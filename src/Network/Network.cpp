@@ -1,10 +1,10 @@
 #include "Network.h"
 #include "Command.h"
-#include "StatusLED.h"
 #include "Link.h"
 #include "Util.h"
 
 namespace CBlocks{
+  Link* Network::link = NULL;
   String Network::clientID = String("");
   Will Network::firstWill = Will();
   Will Network::lastWill = Will();
@@ -16,31 +16,21 @@ namespace CBlocks{
   CommandResponse Network::commandResponse = CommandResponse();
   SimpleList<Subscription*> Network::subscriptions = SimpleList<Subscription*>();
 
-  Network::Network(Link* link, StatusLED* statusLED, String clientID, MQTT mqtt, Will firstWill, Will lastWill){
+  Network::Network(Link* link, String clientID, MQTT mqtt, Will firstWill, Will lastWill){
     this->link = link;
-    this->statusLED = statusLED;
     this->clientID = clientID;
     this->mqtt = mqtt;
     this->firstWill = firstWill;
     this->lastWill = lastWill;
   }
 
-  void Network::init(){
-    setupLink();
+  void Network::begin(){
     initMQTTClient();
-    publishFirstWill();
-  }
-
-  void Network::setupLink(){
-    statusLED->connecting();
-    link->connect();
-    statusLED->running();
   }
 
   void Network::initMQTTClient(){
     mqtt.client->setServer(mqtt.host, mqtt.port);
     mqtt.client->setCallback(Network::subscriptionCallback);
-    ensureConnected();
   }
 
   void Network::subscriptionCallback(char *topic, byte *payload, unsigned int length){
@@ -101,21 +91,28 @@ namespace CBlocks{
     return (Util::validateCommandRequestID(*commandJson).length() == 0);
   }
 
-  void Network::ensureConnected(){
-    while (!mqtt.client->connected()) {
+  bool Network::ensureConnected(){
+    if(!link->isConnected() && !link->connect()){
+      return false;
+    }
+
+    if(!mqtt.client->connected()) {
       Serial.print("Attempting MQTT connection to ");
-      Serial.print(String(mqtt.host) + String(" "));
+      Serial.println(mqtt.host);
 
       if (connectIsSuccessfull()) {
         Serial.println("connected");
       } else {
         Serial.print("failed, rc=");
         Serial.print(mqtt.client->state());
-        Serial.println(" trying again ...");
-        delay(RECONNECT_TIME_IN_MS);
+
+        return false;
       }
     }
+
     mqtt.client->loop();
+
+    return true;
   }
 
   bool Network::connectIsSuccessfull(){
@@ -139,7 +136,6 @@ namespace CBlocks{
 
   void Network::subscribe(String topic, commandCallback cb){
     addSubscription(topic, cb);
-    ensureConnected();
     subscribe(topic);
   }
 
@@ -155,14 +151,19 @@ namespace CBlocks{
     mqtt.client->subscribe(topic.c_str());
   }
 
-  void Network::keepOnline(){
-    this->ensureConnected();
-  }
-
   void Network::disconnect(){
+    if(!isConnected()){
+      return;
+    }
+
     publishLastWill();
     mqtt.client->disconnect();
+    link->disconnect();
     Serial.println("Disconnected from Network");
     delay(20);
+  }
+
+  bool Network::isConnected(){
+    return (link->isConnected() && mqtt.client->connected());
   }
 }

@@ -8,7 +8,6 @@
 #include "Command.h"
 #include "SimpleList.h"
 #include "Link.h"
-#include "StatusLED.h"
 
 #define RECONNECT_TIME_IN_MS 5000
 
@@ -28,8 +27,7 @@ namespace CBlocks{
 
   class Network{
   private:
-    Link* link;
-    StatusLED* statusLED;
+    static Link* link;
     static String clientID;
     static Will firstWill;
     static Will lastWill;
@@ -43,12 +41,12 @@ namespace CBlocks{
 
     void setupLink();
     void initMQTTClient();
-    static void ensureConnected();
     static bool connectIsSuccessfull();
     void publishFirstWill();
     void publishLastWill();
     void addSubscription(String topic, commandCallback cb);
     void subscribe(String topic);
+
     static void subscriptionCallback(char* topic, byte* payload, unsigned int length);
     static void parseCommand(char *topic, byte *payload, unsigned int length);
     static bool commandSuccessfullyParsed();
@@ -59,9 +57,10 @@ namespace CBlocks{
     static void respondToCommandIfRequestIDPresent();
     static bool commandHasValidRequestID();
   public:
-    Network(Link* link, StatusLED* statusLED, String clientID, MQTT mqtt, Will firstWill, Will lastWill);
-    void init();
-    void keepOnline();
+    Network(Link* link, String clientID, MQTT mqtt, Will firstWill, Will lastWill);
+    void begin();
+    bool isConnected();
+    static bool ensureConnected();
     static void publish(String topic, String payload);
     void subscribe(String topic, commandCallback cb);
     void disconnect();

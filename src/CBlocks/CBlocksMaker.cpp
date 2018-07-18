@@ -8,15 +8,16 @@
 #include "StatusLED.h"
 #include "Link.h"
 #include "PowerManager.h"
+#include "Pairing.h"
 
 namespace CBlocks{
-  CBlocks* makeMQTT(unsigned int objectID, unsigned int instanceID, Link* link, MQTT mqtt, StatusLED* statusLED, PowerManager* powerManager){
+  CBlocks* makeMQTT(unsigned int objectID, unsigned int instanceID, Link* link, MQTT mqtt, StatusLED* statusLED, PowerManager* powerManager, Pairing* pairing){
     String clientID = Util::getClientID(objectID, instanceID);
     Will firstWill = Util::getFirstWillFor(objectID, instanceID);
     Will lastWill = Util::getLastWillFor(objectID, instanceID);
 
-    Network* network = new Network(link, statusLED, clientID, mqtt, firstWill, lastWill);
+    Network* network = new Network(link, clientID, mqtt, firstWill, lastWill);
 
-    return new CBlocks(objectID, instanceID, network, powerManager);
+    return new CBlocks(objectID, instanceID, network, powerManager, pairing, statusLED);
   }
 }
