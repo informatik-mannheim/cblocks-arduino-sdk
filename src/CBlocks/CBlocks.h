@@ -8,40 +8,57 @@
 #include "UpdateTimer.h"
 #include "Pairing.h"
 #include "StatusLED.h"
+#include "Fsm.h"
 
 #define BATTERY_STATUS_RESOURCE_ID 255
 #define BATTERY_STATUS_UPDATE_INTERVAL_MS 5000
 
 namespace CBlocks{
-  enum State { CONNECTION_FAILED, CONNECTED, PAIRING, PAIRED };
+  enum StateTransition { IS_PAIRED, NOT_PAIRED, CONNECTION_SUCCESS, CONNECTION_FAIL, DISCONNECT, PAIRING_BUTTON_PRESSED};
 
   class CBlocks
   {
   private:
-    unsigned int objectID;
-    unsigned int instanceID;
-    Network* network;
-    PowerManager* powerManager;
-    UpdateTimer* batteryStatusUpdateTimer;
-    Pairing* pairing;
-    StatusLED* statusLED;
-    State state;
+    static unsigned int objectID;
+    static unsigned int instanceID;
+    static Network* network;
+    static PowerManager* powerManager;
+    static UpdateTimer* batteryStatusUpdateTimer;
+    static Pairing* pairing;
+    static StatusLED* statusLED;
+    // State state;
 
-    void publishBatteryStatus();
-    String getOutputTopicFor(unsigned int resourceID);
-    String getInputTopicFor(unsigned int resourceID);
-    bool shouldTurnOff();
+    static State* statePaired;
+    static State* statePairing;
+    static State* stateConnected;
+    static State* stateNotConnected;
+    static Fsm* fsm;
+
+    static void initStateMachine();
+    static void publishBatteryStatus();
+    static String getOutputTopicFor(unsigned int resourceID);
+    static String getInputTopicFor(unsigned int resourceID);
+    static bool shouldTurnOff();
+
+    static void onStatePairedEnter();
+    static void onStatePairedUpdate();
+    static void onStatePairingEnter();
+    static void onStatePairingUpdate();
+    static void onStateConnectedEnter();
+    static void onStateConnectedUpdate();
+    static void onStateNotConnectedEnter();
+    static void onStateNotConnectedUpdate();
   public:
     CBlocks(unsigned int objectID, unsigned int instanceID, Network* network, PowerManager* powerManager, Pairing* pairing, StatusLED* statusLED);
 
-    void begin();
-    void heartBeat();
-    void updateResource(unsigned int resourceID, String value);
-    void updateResource(unsigned int resourceID, unsigned int value);
-    void updateResource(unsigned int resourceID, float value);
-    void updateResource(unsigned int resourceID, bool value);
-    void updateResource(unsigned int resourceID, JsonObject& json);
-    void registerCommand(unsigned int resourceID, commandCallback cb);
+    static void begin();
+    static void heartBeat();
+    static void updateResource(unsigned int resourceID, String value);
+    static void updateResource(unsigned int resourceID, unsigned int value);
+    static void updateResource(unsigned int resourceID, float value);
+    static void updateResource(unsigned int resourceID, bool value);
+    static void updateResource(unsigned int resourceID, JsonObject& json);
+    static void registerCommand(unsigned int resourceID, commandCallback cb);
   };
 }
 

@@ -3,8 +3,23 @@
 #include "UpdateTimer.h"
 #include "Pairing.h"
 #include "StatusLED.h"
+#include "Fsm.h"
 
 namespace CBlocks{
+  State* CBlocks::statePaired = NULL;
+  State* CBlocks::statePairing = NULL;
+  State* CBlocks::stateConnected = NULL;
+  State* CBlocks::stateNotConnected = NULL;
+  Fsm* CBlocks::fsm = NULL;
+  unsigned int CBlocks::objectID;
+  unsigned int CBlocks::instanceID ;
+  Network* CBlocks::network = NULL;
+  PowerManager* CBlocks::powerManager = NULL;
+  UpdateTimer* CBlocks::batteryStatusUpdateTimer = NULL;
+  Pairing* CBlocks::pairing = NULL;
+  StatusLED* CBlocks::statusLED = NULL;
+
+
   CBlocks::CBlocks(unsigned int objectID, unsigned int instanceID, Network* network, PowerManager* powerManager, Pairing* pairing, StatusLED* statusLED){
     this->objectID = objectID;
     this->instanceID = instanceID;
@@ -13,6 +28,11 @@ namespace CBlocks{
     this->batteryStatusUpdateTimer = new UpdateTimer(BATTERY_STATUS_UPDATE_INTERVAL_MS);
     this->pairing = pairing;
     this->statusLED = statusLED;
+
+    statePaired = new State(onStatePairedEnter, onStatePairedUpdate, NULL);
+    statePairing = new State(onStatePairingEnter, onStatePairingUpdate, NULL);
+    stateConnected = new State(onStateConnectedEnter, onStateConnectedUpdate, NULL);
+    stateNotConnected = new State(onStateNotConnectedEnter, onStateNotConnectedUpdate, NULL);
   }
 
   void CBlocks::begin(){
@@ -20,10 +40,79 @@ namespace CBlocks{
     pairing->begin();
     network->begin();
 
+    initStateMachine();
+  }
+
+  void CBlocks::initStateMachine(){
     if(pairing->isPaired()){
-      state = PAIRED;
+      fsm = new Fsm(statePaired);
     }else{
-      state = CONNECTION_FAILED;
+      fsm = new Fsm(stateNotConnected);
+    }
+
+    fsm->add_transition(statePaired, stateConnected, StateTransition::CONNECTION_SUCCESS, NULL);
+    fsm->add_transition(statePaired, stateNotConnected, StateTransition::CONNECTION_FAIL, NULL);
+    fsm->add_transition(stateConnected, statePairing, StateTransition::PAIRING_BUTTON_PRESSED, NULL);
+    fsm->add_transition(stateNotConnected, statePairing, StateTransition::PAIRING_BUTTON_PRESSED, NULL);
+    fsm->add_transition(statePairing, statePaired, StateTransition::IS_PAIRED, NULL);
+    fsm->add_transition(statePairing, stateNotConnected, StateTransition::PAIRING_BUTTON_PRESSED, NULL);
+  }
+
+  void CBlocks::onStatePairedEnter(){
+    Serial.println("State paired");
+    network->disconnect();
+    statusLED->connecting();
+
+    network->ensureConnected();
+  }
+
+  void CBlocks::onStatePairedUpdate(){
+    if(network->isConnected()){
+      fsm->trigger(StateTransition::CONNECTION_SUCCESS);
+    }else{
+      fsm->trigger(StateTransition::CONNECTION_FAIL);
+    }
+  }
+
+  void CBlocks::onStatePairingEnter(){
+    Serial.println("State pairing");
+    statusLED->pairing();
+    pairing->reset();
+  }
+
+  void CBlocks::onStatePairingUpdate(){
+    if(!pairing->isPairingButtonOn()){
+      pairing->pair();
+
+      if(pairing->isPaired()){
+        fsm->trigger(StateTransition::IS_PAIRED);
+      }
+    }else{
+      fsm->trigger(StateTransition::PAIRING_BUTTON_PRESSED);
+    }
+  }
+
+  void CBlocks::onStateConnectedEnter(){
+    Serial.println("State connected");
+    statusLED->running();
+  }
+
+  void CBlocks::onStateConnectedUpdate(){
+    publishBatteryStatus();
+
+    if(pairing->isPairingButtonOn()){
+      fsm->trigger(StateTransition::PAIRING_BUTTON_PRESSED);
+    }
+  }
+
+  void CBlocks::onStateNotConnectedEnter(){
+    Serial.println("State Not connected");
+    statusLED->error();
+  }
+
+  void CBlocks::onStateNotConnectedUpdate(){
+    if(pairing->isPairingButtonOn()){
+      fsm->trigger(StateTransition::PAIRING_BUTTON_PRESSED);
     }
   }
 
@@ -33,54 +122,7 @@ namespace CBlocks{
       powerManager->turnOff();
     }
 
-    switch (state) {
-      case PAIRED: {
-        network->disconnect();
-        statusLED->connecting();
-
-        if(network->ensureConnected()){
-          state = CONNECTED;
-        }else{
-          state = CONNECTION_FAILED;
-        }
-
-        break;
-      }
-      case PAIRING: {
-        statusLED->pairing();
-
-        if(pairing->isInPairingMode()){
-          pairing->pair();
-        }else{
-          if(pairing->isPaired()){
-            state = PAIRED;
-          }else{
-            state = CONNECTION_FAILED;
-          }
-        }
-
-        break;
-      }
-      case CONNECTED:{
-        statusLED->running();
-        publishBatteryStatus();
-
-        if(pairing->isInPairingMode()){
-          state = PAIRING;
-        }
-
-        break;
-      }
-      case CONNECTION_FAILED: {
-        statusLED->error();
-
-        if(pairing->isInPairingMode()){
-          state = PAIRING;
-        }
-
-        break;
-      }
-    }
+    fsm->run_machine();
   }
 
   bool CBlocks::shouldTurnOff(){
@@ -94,13 +136,13 @@ namespace CBlocks{
   }
 
   void CBlocks::updateResource(unsigned int resourceID, String value){
-    if(state != CONNECTED) return;
+    if(!network->isConnected()) return;
 
     network->publish(getOutputTopicFor(resourceID), value);
   }
 
   void CBlocks::updateResource(unsigned int resourceID, unsigned int value){
-    if(state != CONNECTED) return;
+    if(!network->isConnected()) return;
 
     network->publish(getOutputTopicFor(resourceID), Util::getPayloadFor(value));
   }
@@ -110,19 +152,19 @@ namespace CBlocks{
   }
 
   void CBlocks::updateResource(unsigned int resourceID, float value){
-    if(state != CONNECTED) return;
+    if(!network->isConnected()) return;
 
     network->publish(getOutputTopicFor(resourceID), Util::getPayloadFor(value));
   }
 
   void CBlocks::updateResource(unsigned int resourceID, bool value){
-    if(state != CONNECTED) return;
+    if(!network->isConnected()) return;
 
     network->publish(getOutputTopicFor(resourceID), Util::getPayloadFor(value));
   }
 
   void CBlocks::updateResource(unsigned int resourceID, JsonObject& value){
-    if(state != CONNECTED) return;
+    if(!network->isConnected()) return;
 
     network->publish(getOutputTopicFor(resourceID), Util::getPayloadFor(value));
   }

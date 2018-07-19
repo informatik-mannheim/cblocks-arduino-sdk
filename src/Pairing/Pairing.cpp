@@ -7,8 +7,6 @@
 namespace CBlocks{
   Pairing::Pairing(int pairingModePin, WiFiLink* wifiLink, AstroMac::AstroMac* astroMac)
   : pairingModePin(pairingModePin), wifiLink(wifiLink), astroMac(astroMac){
-    isPairingMode = false;
-    isPairingStarted = false;
     lastButtonState = HIGH;
     debounceUpdateTimer = new UpdateTimer(DEBOUNCE_MS);
   }
@@ -29,36 +27,31 @@ namespace CBlocks{
   }
 
   bool Pairing::isPaired(){
-    Serial.println(credentials.ssid);
-    Serial.println(credentials.password);
     return (credentials.ssid.length() && credentials.password.length());
   }
 
-  bool Pairing::isInPairingMode(){
+  bool Pairing::isPairingButtonOn(){
+    bool result = false;
+
     if(debounceUpdateTimer->updateIntervalExceeded()){
       bool buttonState = digitalRead(pairingModePin);
 
       if(buttonState == LOW && lastButtonState == HIGH){
-        isPairingMode = !isPairingMode;
+        result = true;
       }
 
       lastButtonState = buttonState;
     }
 
-    if(!isPairingMode){
-      isPairingStarted = false;
-    }
+    return result;
+  }
 
-    return isPairingMode;
+  void Pairing::reset(){
+    clearCredentials();
+    setLinkCredentials();
   }
 
   bool Pairing::pair(){
-    if(!isPairingStarted){
-      isPairingStarted = true;
-      clearCredentials();
-      setLinkCredentials();
-    }
-
     String data = astroMac->detect(); //TODO extra function
 
     if(data.length()){
@@ -69,8 +62,6 @@ namespace CBlocks{
       setLinkCredentials();
 
       Serial.println(data);
-      isPairingStarted = false;
-      isPairingMode = false;
       return true;
     }
 

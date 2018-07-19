@@ -12,8 +12,6 @@ namespace CBlocks{
     static const long DEBOUNCE_MS = 20;
     int pairingModePin;
     bool lastButtonState;
-    bool isPairingMode;
-    bool isPairingStarted;
     WiFiLink* wifiLink;
     Credentials credentials;
     UpdateTimer* debounceUpdateTimer;
@@ -24,7 +22,8 @@ namespace CBlocks{
     Pairing(int pairingModePin, WiFiLink* wifiLink, AstroMac::AstroMac* astroMac);
     void begin();
     bool isPaired();
-    bool isInPairingMode();
+    bool isPairingButtonOn();
+    void reset();
     bool pair();
     void saveCredentials();
     void setLinkCredentials();
