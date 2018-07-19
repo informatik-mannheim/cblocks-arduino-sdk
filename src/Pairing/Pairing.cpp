@@ -54,14 +54,13 @@ namespace CBlocks{
   bool Pairing::pair(){
     String data = astroMac->detect(); //TODO extra function
 
-    if(data.length()){
-      credentials.ssid = String("cblocks-gateway");
-      credentials.password = data;
+    if(data.length() && data.indexOf(';')){
+      credentials.ssid = data.substring(0, data.indexOf(';'));
+      credentials.password = data.substring(data.indexOf(';')+1);
 
       saveCredentials();
       setLinkCredentials();
 
-      Serial.println(data);
       return true;
     }
 

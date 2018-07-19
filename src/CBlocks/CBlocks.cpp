@@ -56,6 +56,7 @@ namespace CBlocks{
     fsm->add_transition(stateNotConnected, statePairing, StateTransition::PAIRING_BUTTON_PRESSED, NULL);
     fsm->add_transition(statePairing, statePaired, StateTransition::IS_PAIRED, NULL);
     fsm->add_transition(statePairing, stateNotConnected, StateTransition::PAIRING_BUTTON_PRESSED, NULL);
+    //fsm->add_timed_transition(statePairing, stateNotConnected, 5000, NULL); TODO: timeout to save power
   }
 
   void CBlocks::onStatePairedEnter(){
@@ -107,6 +108,7 @@ namespace CBlocks{
 
   void CBlocks::onStateNotConnectedEnter(){
     Serial.println("State Not connected");
+    network->disconnect();
     statusLED->error();
   }
 
