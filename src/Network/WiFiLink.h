@@ -13,7 +13,7 @@ namespace CBlocks{
 
   class WiFiLink: public Link{
   private:
-    const long CONNECT_TIMEOUT_MS = 3000;
+    const long CONNECT_TIMEOUT_MS = 5000;
     Credentials credentials;
     UpdateTimer* connectTimeoutUpdateTimer;
   public:
