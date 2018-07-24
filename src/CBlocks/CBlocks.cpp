@@ -95,6 +95,7 @@ namespace CBlocks{
 
   void CBlocks::onStateConnectedEnter(){
     Serial.println("State connected");
+    network->publishFirstWill();
     statusLED->running();
   }
 

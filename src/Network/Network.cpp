@@ -67,6 +67,7 @@ namespace CBlocks{
   void Network::getResponseFromCommandCallback(){
     for(SimpleList<Subscription*>::iterator itr = subscriptions.begin(); itr != subscriptions.end();){
       if((*itr)->topic.equals(commandTopic)){
+        Serial.println("Calling cb for " + commandTopic);
         commandResponse = (*itr)->cb(*commandJson);
         return;
       }
@@ -102,6 +103,8 @@ namespace CBlocks{
 
       if (connectIsSuccessfull()) {
         Serial.println("connected");
+
+        subsribeToCommandTopics();
       } else {
         Serial.print("failed, rc=");
         Serial.print(mqtt.client->state());
@@ -117,6 +120,13 @@ namespace CBlocks{
 
   bool Network::connectIsSuccessfull(){
     return mqtt.client->connect(clientID.c_str(), mqtt.username, mqtt.password, lastWill.topic.c_str(), lastWill.qos, lastWill.retain, lastWill.message.c_str());
+  }
+
+  void Network::subsribeToCommandTopics(){
+    for(SimpleList<Subscription*>::iterator itr = subscriptions.begin(); itr != subscriptions.end();){
+      subscribe((*itr)->topic);
+      ++itr;
+    }
   }
 
   void Network::publishFirstWill(){
@@ -136,7 +146,10 @@ namespace CBlocks{
 
   void Network::subscribe(String topic, commandCallback cb){
     addSubscription(topic, cb);
-    subscribe(topic);
+
+    if(isConnected()){
+      subscribe(topic);
+    }
   }
 
   void Network::addSubscription(String topic, commandCallback cb){
@@ -148,6 +161,7 @@ namespace CBlocks{
   }
 
   void Network::subscribe(String topic){
+    Serial.println("Subscribed to " + topic);
     mqtt.client->subscribe(topic.c_str());
   }
 

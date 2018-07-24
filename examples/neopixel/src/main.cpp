@@ -72,6 +72,4 @@ void setup(){
 
 void loop(){
   neopixel->publishStatus();
-  // digitalWrite(14, HIGH);
-  // digitalWrite(32, LOW);
 }

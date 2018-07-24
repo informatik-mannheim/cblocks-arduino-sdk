@@ -42,10 +42,8 @@ namespace CBlocks{
     void setupLink();
     void initMQTTClient();
     static bool connectIsSuccessfull();
-    void publishFirstWill();
     void publishLastWill();
     void addSubscription(String topic, commandCallback cb);
-    void subscribe(String topic);
 
     static void subscriptionCallback(char* topic, byte* payload, unsigned int length);
     static void parseCommand(char *topic, byte *payload, unsigned int length);
@@ -56,6 +54,8 @@ namespace CBlocks{
     static void getResponseFromCommandCallback();
     static void respondToCommandIfRequestIDPresent();
     static bool commandHasValidRequestID();
+    static void subscribe(String topic);
+    static void subsribeToCommandTopics();
   public:
     Network(Link* link, String clientID, MQTT mqtt, Will firstWill, Will lastWill);
     void begin();
@@ -64,6 +64,7 @@ namespace CBlocks{
     static void publish(String topic, String payload);
     void subscribe(String topic, commandCallback cb);
     void disconnect();
+    void publishFirstWill();
   };
 }
 
