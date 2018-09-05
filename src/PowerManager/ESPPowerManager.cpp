@@ -18,6 +18,10 @@ namespace CBlocks{
     turnOn();
   }
 
+  void ESP32PowerManager::turnOn(){
+    digitalWrite(powerPin, HIGH);
+  }
+
   bool ESP32PowerManager::isPowerButtonOn(){
     return !digitalRead(wakeUpPin);
   }
@@ -40,15 +44,6 @@ namespace CBlocks{
   void ESP32PowerManager::turnPowerOff(){
     digitalWrite(powerPin, LOW);
     digitalWrite(pixelPin, HIGH); // this makes the status leds turn off
-  }
-
-  void ESP32PowerManager::turnOn(){
-    digitalWrite(powerPin, HIGH);
-  }
-
-  float ESP32PowerManager::getBatteryVoltage(){
-    readBatteryVoltage();
-    return batteryVoltage;
   }
 
   BatteryStatus ESP32PowerManager::getBatteryStatus(){

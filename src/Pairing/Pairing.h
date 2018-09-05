@@ -2,32 +2,15 @@
 #define PAIRING_H
 
 #include "Arduino.h"
-#include "WiFiLink.h"
-#include "UpdateTimer.h"
-#include "AstroMac.h"
 
 namespace CBlocks{
   class Pairing{
-    static const int EE_ADDRESS = 0;
-    static const long DEBOUNCE_MS = 20;
-    int pairingModePin;
-    bool lastButtonState;
-    WiFiLink* wifiLink;
-    Credentials credentials;
-    UpdateTimer* debounceUpdateTimer;
-    AstroMac::AstroMac* astroMac;
-
-    void clearCredentials();
   public:
-    Pairing(int pairingModePin, WiFiLink* wifiLink, AstroMac::AstroMac* astroMac);
-    void begin();
-    bool isPaired();
-    bool isPairingButtonOn();
-    void reset();
-    bool pair();
-    void saveCredentials();
-    void setLinkCredentials();
-    void readCredentials();
+    virtual void begin();
+    virtual bool isPaired();
+    virtual bool isPairingButtonOn();
+    virtual bool pair();
+    virtual void reset();
   };
 }
 

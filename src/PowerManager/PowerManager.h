@@ -11,7 +11,6 @@ namespace CBlocks{
     virtual bool isBatteryLow();
     virtual void turnOff();
     virtual void turnOn();
-    virtual float getBatteryVoltage();
     virtual BatteryStatus getBatteryStatus();
   };
 }
