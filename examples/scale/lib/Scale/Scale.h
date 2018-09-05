@@ -18,29 +18,48 @@ namespace CBlocks{
     HX711* scale;
     CBlocks* cblocks;
     UpdateTimer* updateTimer;
+    int tarePin;
+    static volatile byte buttonPressed;
+
+    static void tareInterruptHandler();
   public:
-    Scale(HX711* scale, long calibrationFactor, CBlocks* cblocks);
+    Scale(HX711* scale, long calibrationFactor, CBlocks* cblocks, int tarePin);
     void begin();
     void publishStatus();
   };
 
-  Scale::Scale(HX711* scale, long calibrationFactor, CBlocks* cblocks){
+  volatile byte Scale::buttonPressed = false;
+
+  Scale::Scale(HX711* scale, long calibrationFactor, CBlocks* cblocks, int tarePin){
     this->scale = scale;
     this->calibrationFactor = calibrationFactor;
     this->cblocks = cblocks;
+    this->tarePin = tarePin;
   }
 
   void Scale::begin(){
     this->scale->set_scale(calibrationFactor);
     this->scale->tare();
     this->updateTimer = new UpdateTimer(UPDATE_INTERVAL_IN_MS);
+
+    pinMode(this->tarePin, INPUT_PULLUP);
+    attachInterrupt(digitalPinToInterrupt(this->tarePin), tareInterruptHandler, FALLING);
+  }
+
+  void Scale::tareInterruptHandler(){
+    buttonPressed = true;
   }
 
   void Scale::publishStatus(){
     cblocks->heartBeat();
 
+    if(buttonPressed){
+      this->scale->tare();
+      buttonPressed = false;
+    }
+
     if(updateTimer->updateIntervalExceeded()){
-      float val = scale->get_units(10);
+      float val = scale->get_units();
       cblocks->updateResource(WEIGHT_RESOURCE_ID, val);
     }
   }

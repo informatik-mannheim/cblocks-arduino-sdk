@@ -27,6 +27,7 @@
 #define HX711_DOUT_PIN 23
 #define HX711_CLK_PIN 22
 #define HX711_CALIBRATION_FACTOR -206
+#define TARE_PIN 4
 
 HX711* hx711 = new HX711(HX711_DOUT_PIN, HX711_CLK_PIN);
 
@@ -52,7 +53,7 @@ void init_cblocks(){
 }
 
 void init_sensor(){
-  scale = new CBlocks::Scale(hx711, (long)HX711_CALIBRATION_FACTOR, cblocks);
+  scale = new CBlocks::Scale(hx711, (long)HX711_CALIBRATION_FACTOR, cblocks, TARE_PIN);
   scale->begin();
 }
 
