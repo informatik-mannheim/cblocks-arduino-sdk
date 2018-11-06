@@ -1,7 +1,7 @@
 #ifndef CBLOCKS_STATUS_LED
 #define CBLOCKS_STATUS_LED
 
-#define HIGH_VALUE 25
+#define HIGH_VALUE 50
 
 #include <Adafruit_NeoPixel.h>
 

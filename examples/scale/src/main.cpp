@@ -16,14 +16,11 @@
 #include "Scale.h"
 
 #define BAUD_RATE 115200
-#define OBJECT_ID 3305
+#define OBJECT_ID 3306
 #define INSTANCE_ID 0
 #define PIXEL_PIN 14
-#define STATUS_PIXEL 1
+#define STATUS_PIXEL 0
 #define NUMBER_OF_PIXELS 1
-#define POWER_PIN 32
-#define WAKE_UP_PIN GPIO_NUM_33
-#define BATTERY_STATUS_PIN A3
 #define HX711_DOUT_PIN 23
 #define HX711_CLK_PIN 22
 #define HX711_CALIBRATION_FACTOR -206

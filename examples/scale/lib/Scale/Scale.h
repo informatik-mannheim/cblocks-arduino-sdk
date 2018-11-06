@@ -55,12 +55,14 @@ namespace CBlocks{
 
     if(buttonPressed){
       this->scale->tare();
+      Serial.println("Tare");
       buttonPressed = false;
     }
 
     if(updateTimer->updateIntervalExceeded()){
       float val = scale->get_units();
       cblocks->updateResource(WEIGHT_RESOURCE_ID, val);
+      Serial.println(val);
     }
   }
 }

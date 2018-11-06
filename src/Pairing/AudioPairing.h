@@ -21,7 +21,7 @@ namespace CBlocks{
     void clearCredentials();
   public:
     AudioPairing(int pairingModePin, WiFiLink* wifiLink, AstroMac::AstroMac* astroMac);
-    virtul void begin();
+    virtual void begin();
     virtual bool isPaired();
     virtual bool isPairingButtonOn();
     virtual void reset();

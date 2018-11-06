@@ -11,6 +11,7 @@
 #define IS_ON_RESOURCE_ID 0
 #define COLOR_RESOURCE_ID 1
 #define UPDATE_INTERVAL_IN_MS 1000
+#define PIXEL_OFFSET 1
 
 namespace CBlocks{
   class Neopixel{
@@ -79,13 +80,13 @@ namespace CBlocks{
   }
 
   void Neopixel::renderPixelsWithColor(){
-    for(int i=0;i<numberOfPixels;i++){
+    for(int i=PIXEL_OFFSET;i<numberOfPixels+PIXEL_OFFSET;i++){
       strip->setPixelColor(i, strip->Color(color->green, color->red, color->blue));
     }
   }
 
   void Neopixel::switchPixelsOff(){
-    for(int i=0;i<numberOfPixels;i++){
+    for(int i=PIXEL_OFFSET;i<numberOfPixels+PIXEL_OFFSET;i++){
       strip->setPixelColor(i, strip->Color(0, 0, 0));
     }
   }

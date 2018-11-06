@@ -1,5 +1,4 @@
 #include "MQTTConf.h"
-#include "AstroMac.h"
 #include "CBlocks.h"
 #include "Network.h"
 #include "CBlocksMaker.h"
@@ -11,30 +10,17 @@
 #include "WiFi.h"
 #include "PubSubClient.h"
 #include "PowerManager.h"
-#include "ESP32PowerManager.h"
+#include "UsbPowerManager.h"
 #include "Pairing.h"
-#include "AudioPairing.h"
-#include "AstroMac.h"
-#include "EEPROM.h"
-#include "Adafruit_MCP3008.h"
+#include "HardcodedPairing.h"
 
 #define BAUD_RATE 115200
 #define OBJECT_ID 3304
 #define INSTANCE_ID 2
 #define NUMBER_OF_PIXELS 2
 #define PIXEL_PIN 14
-#define STATUS_PIXEL 1
+#define STATUS_PIXEL 0
 #define NUMBER_OF_NEOPIXELS 1
-#define POWER_PIN 32
-#define WAKE_UP_PIN GPIO_NUM_33
-#define BATTERY_STATUS_PIN A3
-#define PAIRING_MODE_PIN 27
-#define SS 15
-
-Adafruit_MCP3008 adc;
-int analogReadFP(uint8_t pin){
-  return adc.readADC(pin);
-}
 
 WiFiClient wifiClient;
 PubSubClient mqttClient(wifiClient);
@@ -44,13 +30,11 @@ CBlocks::Neopixel* neopixel;
 Adafruit_NeoPixel* strip = new Adafruit_NeoPixel(NUMBER_OF_PIXELS, PIXEL_PIN, NEO_GRB + NEO_KHZ800);
 CBlocks::StatusLED* statusLED = new CBlocks::StatusLED(strip, STATUS_PIXEL);
 CBlocks::WiFiLink* wifiLink = new CBlocks::WiFiLink();
-AstroMac::AstroMac* astroMac = new AstroMac::AstroMac(analogReadFP, A0);
-CBlocks::Pairing* pairing = new CBlocks::AudioPairing(PAIRING_MODE_PIN, wifiLink, astroMac);
-CBlocks::PowerManager* powerManager = new CBlocks::ESP32PowerManager(POWER_PIN, WAKE_UP_PIN, PIXEL_PIN, BATTERY_STATUS_PIN);
+CBlocks::Pairing* pairing = new CBlocks::HardcodedPairing("cblocks-gateway", "naeheaufdistanz", wifiLink);
+CBlocks::PowerManager* powerManager = new CBlocks::UsbPowerManager();
 
 void initAndWaitForSerial(){
   Serial.begin(BAUD_RATE);
-  adc.begin(SS);
   delay(1000);
 }
 
