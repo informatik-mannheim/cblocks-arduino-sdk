@@ -4,7 +4,11 @@
 #include <Adafruit_NeoPixel.h>
 
 namespace CBlocks{
-  StatusLED::StatusLED(Adafruit_NeoPixel* strip, int statusPixel) : strip(strip), statusPixel(statusPixel){
+  StatusLED::StatusLED(Adafruit_NeoPixel* strip, int statusPixel) : strip(strip), statusPixel(statusPixel){    
+    for(int i = 0; i< 10; i++){
+      strip->setPixelColor(i, 0, 0, 0);
+    }
+    strip->show();
   }
 
   void StatusLED::connecting(){
