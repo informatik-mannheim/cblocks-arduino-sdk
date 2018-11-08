@@ -24,7 +24,6 @@
 #define NUMBER_OF_PIXELS 2
 #define PIXEL_PIN 14
 #define STATUS_PIXEL 1
-#define NUMBER_OF_NEOPIXELS 1
 #define POWER_PIN 32
 #define WAKE_UP_PIN GPIO_NUM_33
 #define BATTERY_STATUS_PIN A3
@@ -41,7 +40,7 @@ PubSubClient mqttClient(wifiClient);
 CBlocks::MQTT mqtt { &mqttClient, MQTT_HOST, MQTT_PORT, MQTT_USERNAME, MQTT_PASSWORD };
 CBlocks::CBlocks* cblocks;
 CBlocks::Neopixel* neopixel;
-Adafruit_NeoPixel* strip = new Adafruit_NeoPixel(NUMBER_OF_PIXELS, PIXEL_PIN, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel* strip = new Adafruit_NeoPixel(5, PIXEL_PIN, NEO_GRB + NEO_KHZ800);
 CBlocks::StatusLED* statusLED = new CBlocks::StatusLED(strip, STATUS_PIXEL);
 CBlocks::WiFiLink* wifiLink = new CBlocks::WiFiLink();
 AstroMac::AstroMac* astroMac = new AstroMac::AstroMac(analogReadFP, A0);

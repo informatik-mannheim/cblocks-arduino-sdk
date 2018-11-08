@@ -43,7 +43,7 @@ WiFiClient wifiClient;
 PubSubClient mqttClient(wifiClient);
 CBlocks::MQTT mqtt { &mqttClient, MQTT_HOST, MQTT_PORT, MQTT_USERNAME, MQTT_PASSWORD };
 CBlocks::CBlocks* cblocks;
-Adafruit_NeoPixel* strip = new Adafruit_NeoPixel(NUMBER_OF_PIXELS, PIXEL_PIN, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel* strip = new Adafruit_NeoPixel(5, PIXEL_PIN, NEO_RGB + NEO_KHZ800);
 CBlocks::StatusLED* statusLED = new CBlocks::StatusLED(strip, STATUS_PIXEL);
 CBlocks::WiFiLink* wifiLink = new CBlocks::WiFiLink();
 AstroMac::AstroMac* astroMac = new AstroMac::AstroMac(analogReadFP, A0);
@@ -68,7 +68,6 @@ void init_sensor(){
 }
 
 void setup(){
-  strip->begin();
   initAndWaitForSerial();
   init_cblocks();
   init_sensor();
