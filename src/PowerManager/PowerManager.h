@@ -7,10 +7,6 @@ namespace CBlocks{
   class PowerManager{
   public:
     virtual void begin();
-    virtual bool isPowerButtonOn();
-    virtual bool isBatteryLow();
-    virtual void turnOff();
-    virtual void turnOn();
     virtual BatteryStatus getBatteryStatus();
   };
 }

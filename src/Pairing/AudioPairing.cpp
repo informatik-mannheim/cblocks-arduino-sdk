@@ -1,5 +1,3 @@
-#ifdef AURDIO_PAIRING
-
 #include "Arduino.h"
 #include "AstroMac.h"
 #include "AudioPairing.h"
@@ -94,5 +92,3 @@ namespace CBlocks{
     credentials.password.remove(credentials.password.length()-1);
   }
 }
-
-#endif

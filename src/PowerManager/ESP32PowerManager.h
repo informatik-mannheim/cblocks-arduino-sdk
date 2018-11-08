@@ -11,21 +11,14 @@
 namespace CBlocks{
   class ESP32PowerManager : public PowerManager {
   private:
-    int powerPin;
-    gpio_num_t wakeUpPin;
-    int pixelPin;
     int batteryStatusPin;
     float batteryVoltage;
 
     void turnPowerOff();
     void readBatteryVoltage();
   public:
-    ESP32PowerManager(int powerPin, gpio_num_t wakeUpPin, int pixelPin, int batteryStatusPin);
+    ESP32PowerManager(int batteryStatusPin);
     virtual void begin();
-    virtual bool isBatteryLow();
-    virtual bool isPowerButtonOn();
-    virtual void turnOff();
-    virtual void turnOn();
     virtual BatteryStatus getBatteryStatus();
   };
 }

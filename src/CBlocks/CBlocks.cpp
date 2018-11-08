@@ -68,6 +68,7 @@ namespace CBlocks{
   }
 
   void CBlocks::onStatePairedUpdate(){
+    Serial.println("State paired update");
     if(network->isConnected()){
       fsm->trigger(StateTransition::CONNECTION_SUCCESS);
     }else{
@@ -120,18 +121,9 @@ namespace CBlocks{
   }
 
   void CBlocks::heartBeat(){
-    if(shouldTurnOff()){
-      network->disconnect();
-      powerManager->turnOff();
-    }
-
     fsm->run_machine();
   }
-
-  bool CBlocks::shouldTurnOff(){
-    return (!powerManager->isPowerButtonOn() || powerManager->isBatteryLow());
-  }
-
+  
   void CBlocks::publishBatteryStatus(){
     if(batteryStatusUpdateTimer->updateIntervalExceeded()){
       updateResource(BATTERY_STATUS_RESOURCE_ID, (unsigned int)powerManager->getBatteryStatus());
