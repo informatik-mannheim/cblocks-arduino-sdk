@@ -122,6 +122,7 @@ namespace CBlocks{
 
   void CBlocks::heartBeat(){
     if(shouldTurnOff()){
+      network->disconnect();
       powerManager->turnOff();
     }
 
@@ -129,7 +130,7 @@ namespace CBlocks{
   }
 
   bool CBlocks::shouldTurnOff(){
-    return powerManager->isBatteryLow();
+    return (!powerManager->isPowerButtonOn() || powerManager->isBatteryLow());
   }
 
   void CBlocks::publishBatteryStatus(){

@@ -174,7 +174,6 @@ namespace CBlocks{
     mqtt.client->disconnect();
     link->disconnect();
     Serial.println("Disconnected from Network");
-    delay(20);
   }
 
   bool Network::isConnected(){

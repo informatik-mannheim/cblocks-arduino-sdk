@@ -12,22 +12,22 @@
 namespace CBlocks{
   class ESP32PowerManager : public PowerManager {
   private:
-    static int enablePin;
+    static volatile bool isPowerDownPressed;
+    int enablePin;
     int shutDownPin;
     int batteryStatusPin;
     float batteryVoltage;
-    static Network* network;
 
     void readBatteryVoltage();
-    static void handleShutDownInterrupt();
+    static void IRAM_ATTR handleShutDownInterrupt();
   public:
     ESP32PowerManager(int enablePin, int shutDownPin, int batteryStatusPin);
     virtual void begin();
+    virtual bool isPowerButtonOn();
     virtual bool isBatteryLow();
     virtual void turnOff();
     virtual void turnOn();
     virtual BatteryStatus getBatteryStatus();
-    virtual void setNetwork(Network* network);
   };
 }
 

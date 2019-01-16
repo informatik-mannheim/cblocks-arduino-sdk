@@ -3,11 +3,11 @@
 #include "ESP32PowerManager.h"
 
 namespace CBlocks{
-  int ESP32PowerManager::enablePin = 0;
-  Network* ESP32PowerManager::network = NULL;
+  volatile bool ESP32PowerManager::isPowerDownPressed = false;
 
   ESP32PowerManager::ESP32PowerManager(int enablePin, int shutDownPin, int batteryStatusPin)
-    : shutDownPin(shutDownPin),
+    : enablePin(enablePin),
+      shutDownPin(shutDownPin),
       batteryStatusPin(batteryStatusPin),
       batteryVoltage(4.7) {
         this->enablePin = enablePin;
@@ -24,6 +24,10 @@ namespace CBlocks{
 
   void ESP32PowerManager::turnOn(){
     digitalWrite(enablePin, HIGH);
+  }
+
+  bool ESP32PowerManager::isPowerButtonOn(){
+    return !isPowerDownPressed;
   }
 
   bool ESP32PowerManager::isBatteryLow(){
@@ -52,12 +56,7 @@ namespace CBlocks{
     return low;
   }
 
-  void ESP32PowerManager::setNetwork(Network* n){
-    network = n;
-  }
-
-  void ESP32PowerManager::handleShutDownInterrupt(){
-    network->disconnect();
-    digitalWrite(enablePin, HIGH);
+  void IRAM_ATTR ESP32PowerManager::handleShutDownInterrupt(){
+    isPowerDownPressed = true;
   };
 }
