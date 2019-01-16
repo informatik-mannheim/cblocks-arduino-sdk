@@ -1,7 +1,6 @@
 #ifndef ESP32_POWER_MANAGER
 #define ESP32_POWER_MANAGER
 
-#include "Network.h"
 #include "PowerManager.h"
 #include "Arduino.h"
 
