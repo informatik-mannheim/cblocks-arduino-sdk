@@ -121,9 +121,17 @@ namespace CBlocks{
   }
 
   void CBlocks::heartBeat(){
+    if(shouldTurnOff()){
+      powerManager->turnOff();
+    }
+
     fsm->run_machine();
   }
-  
+
+  bool CBlocks::shouldTurnOff(){
+    return powerManager->isBatteryLow();
+  }
+
   void CBlocks::publishBatteryStatus(){
     if(batteryStatusUpdateTimer->updateIntervalExceeded()){
       updateResource(BATTERY_STATUS_RESOURCE_ID, (unsigned int)powerManager->getBatteryStatus());

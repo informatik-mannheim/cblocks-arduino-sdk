@@ -38,6 +38,7 @@ namespace CBlocks{
     static void publishBatteryStatus();
     static String getOutputTopicFor(unsigned int resourceID);
     static String getInputTopicFor(unsigned int resourceID);
+    static bool shouldTurnOff();
 
     static void onStatePairedEnter();
     static void onStatePairedUpdate();

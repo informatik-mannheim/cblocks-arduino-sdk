@@ -17,6 +17,7 @@ namespace CBlocks{
     Will lastWill = Util::getLastWillFor(objectID, instanceID);
 
     Network* network = new Network(link, clientID, mqtt, firstWill, lastWill);
+    powerManager->setNetwork(network);
 
     return new CBlocks(objectID, instanceID, network, powerManager, pairing, statusLED);
   }

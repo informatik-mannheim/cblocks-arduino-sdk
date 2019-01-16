@@ -1,6 +1,7 @@
 #ifndef ESP32_POWER_MANAGER
 #define ESP32_POWER_MANAGER
 
+#include "Network.h"
 #include "PowerManager.h"
 #include "Arduino.h"
 
@@ -11,15 +12,22 @@
 namespace CBlocks{
   class ESP32PowerManager : public PowerManager {
   private:
+    static int enablePin;
+    int shutDownPin;
     int batteryStatusPin;
     float batteryVoltage;
+    static Network* network;
 
-    void turnPowerOff();
     void readBatteryVoltage();
+    static void handleShutDownInterrupt();
   public:
-    ESP32PowerManager(int batteryStatusPin);
+    ESP32PowerManager(int enablePin, int shutDownPin, int batteryStatusPin);
     virtual void begin();
+    virtual bool isBatteryLow();
+    virtual void turnOff();
+    virtual void turnOn();
     virtual BatteryStatus getBatteryStatus();
+    virtual void setNetwork(Network* network);
   };
 }
 

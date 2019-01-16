@@ -27,6 +27,8 @@
 #define SS 15
 #define BATTERY_STATUS_PIN A9
 #define MIC_PIN A0
+#define ENABLE_PIN 12
+#define SHUT_DOWN_PIN 13
 
 Adafruit_MCP3008 adc;
 int analogReadFP(uint8_t pin){
@@ -42,7 +44,7 @@ CBlocks::StatusLED* statusLED = new CBlocks::StatusLED(strip, STATUS_PIXEL);
 CBlocks::WiFiLink* wifiLink = new CBlocks::WiFiLink();
 AstroMac::AstroMac* astroMac = new AstroMac::AstroMac(analogReadFP, MIC_PIN);
 CBlocks::Pairing* pairing = new CBlocks::AudioPairing(PAIRING_MODE_PIN, wifiLink, astroMac);
-CBlocks::PowerManager* powerManager = new CBlocks::ESP32PowerManager(BATTERY_STATUS_PIN);
+CBlocks::PowerManager* powerManager = new CBlocks::ESP32PowerManager(ENABLE_PIN, SHUT_DOWN_PIN, BATTERY_STATUS_PIN);
 
 void initAndWaitForSerial(){
   Serial.begin(BAUD_RATE);
