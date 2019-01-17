@@ -10,12 +10,12 @@
 #include "PubSubClient.h"
 #include "PowerManager.h"
 #include "ESP32PowerManager.h"
-#include "HX711.h"
 #include "Pairing.h"
 #include "AudioPairing.h"
 #include "AstroMac.h"
 #include "EEPROM.h"
 #include "Adafruit_MCP3008.h"
+#include "CButton.h"
 
 #define BAUD_RATE 115200
 #define OBJECT_ID 3302
