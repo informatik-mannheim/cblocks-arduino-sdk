@@ -3,6 +3,7 @@
 
 #define STATE_RESOURCE 0
 #define EVENT_RESOURCE 1
+#define DEBOUNCE_MS 75
 
 #include "Arduino.h"
 #include "CBlocks.h"
@@ -29,7 +30,7 @@ namespace CBlocks {
     cblocks(cblocks) {};
 
   void CButton::begin(){
-    button = new Button(buttonPin);
+    button = new Button(buttonPin, DEBOUNCE_MS);
     button->begin();
   }
 
