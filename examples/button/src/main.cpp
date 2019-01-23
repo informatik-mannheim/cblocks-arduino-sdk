@@ -26,9 +26,10 @@
 #define PAIRING_MODE_PIN 27
 #define SS 15
 #define BATTERY_STATUS_PIN A9
-#define MIC_PIN A0
+#define MIC_PIN 0
 #define ENABLE_PIN 12
 #define SHUT_DOWN_PIN 13
+#define BUTTON_PIN 21
 
 Adafruit_MCP3008 adc;
 int analogReadFP(uint8_t pin){
@@ -39,17 +40,17 @@ WiFiClient wifiClient;
 PubSubClient mqttClient(wifiClient);
 CBlocks::MQTT mqtt { &mqttClient, MQTT_HOST, MQTT_PORT, MQTT_USERNAME, MQTT_PASSWORD };
 CBlocks::CBlocks* cblocks;
-Adafruit_NeoPixel* strip = new Adafruit_NeoPixel(NUMBER_OF_PIXELS, PIXEL_PIN, NEO_RGB + NEO_KHZ800);
+Adafruit_NeoPixel* strip = new Adafruit_NeoPixel(NUMBER_OF_PIXELS, PIXEL_PIN, NEO_GRB + NEO_KHZ800);
 CBlocks::StatusLED* statusLED = new CBlocks::StatusLED(strip, STATUS_PIXEL);
 CBlocks::WiFiLink* wifiLink = new CBlocks::WiFiLink();
 AstroMac::AstroMac* astroMac = new AstroMac::AstroMac(analogReadFP, MIC_PIN);
 CBlocks::Pairing* pairing = new CBlocks::AudioPairing(PAIRING_MODE_PIN, wifiLink, astroMac);
 CBlocks::PowerManager* powerManager = new CBlocks::ESP32PowerManager(ENABLE_PIN, SHUT_DOWN_PIN, BATTERY_STATUS_PIN);
+CBlocks::CButton* cButton = new CBlocks::CButton(BUTTON_PIN, cblocks);
 
 void initAndWaitForSerial(){
   Serial.begin(BAUD_RATE);
   adc.begin(SS);
-  delay(1000);
 }
 
 void init_cblocks(){
@@ -58,7 +59,7 @@ void init_cblocks(){
 }
 
 void init_sensor(){
-  //TODO: button lib
+  cButton->begin();
 }
 
 void setup(){
@@ -68,4 +69,5 @@ void setup(){
 }
 
 void loop(){
+  cButton->publishStatus();
 }

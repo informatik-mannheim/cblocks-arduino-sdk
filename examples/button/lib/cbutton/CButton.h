@@ -34,6 +34,7 @@ namespace CBlocks {
   }
 
   void CButton::publishStatus(){
+    cblocks->heartBeat();
     button->read();
 
     if(!hasPublished){
@@ -44,19 +45,23 @@ namespace CBlocks {
     }
 
     if(button->wasPressed()){
-      isOn = !isOn;
-
       if(isOn){
-        cblocks->updateResource(STATE_RESOURCE, "On");
-      }else {
-        cblocks->updateResource(STATE_RESOURCE, "Off");
+        isOn = false;
+      } else {
+        isOn = true;
       }
 
-      cblocks->updateResource(EVENT_RESOURCE, "pressed");
+      if(isOn){
+        cblocks->updateResource(STATE_RESOURCE, true);
+      }else {
+        cblocks->updateResource(STATE_RESOURCE, false);
+      }
+
+      cblocks->updateResource(EVENT_RESOURCE, String("pressed"));
     }
 
     if(button->wasReleased()){
-      cblocks->updateResource(EVENT_RESOURCE, "released");
+      cblocks->updateResource(EVENT_RESOURCE, String("released"));
     }
   }
 }

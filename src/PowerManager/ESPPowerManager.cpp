@@ -16,7 +16,7 @@ namespace CBlocks{
     pinMode(enablePin, OUTPUT);
     pinMode(shutDownPin, INPUT_PULLUP);
     pinMode(batteryStatusPin, INPUT);
-    attachInterrupt(digitalPinToInterrupt(shutDownPin), handleShutDownInterrupt, FALLING);
+    attachInterrupt(digitalPinToInterrupt(shutDownPin), handleShutDownInterrupt, RISING);
 
     turnOn();
   }
@@ -30,6 +30,7 @@ namespace CBlocks{
   }
 
   bool ESP32PowerManager::isBatteryLow(){
+    return false;
     readBatteryVoltage();
 
     return batteryVoltage < BATTERY_SHUT_DOWN_THRESHOLD_V;
@@ -40,7 +41,7 @@ namespace CBlocks{
   }
 
   void ESP32PowerManager::turnOff(){
-    handleShutDownInterrupt();
+    digitalWrite(enablePin, LOW);
   }
 
   BatteryStatus ESP32PowerManager::getBatteryStatus(){

@@ -1,7 +1,7 @@
 #ifndef CBLOCKS_STATUS_LED
 #define CBLOCKS_STATUS_LED
 
-#define HIGH_VALUE 50
+#define HIGH_VALUE 120
 
 #include <Adafruit_NeoPixel.h>
 
@@ -10,6 +10,7 @@ namespace CBlocks{
   private:
     Adafruit_NeoPixel* strip;
     int statusPixel;
+    void clear();
 
   public:
     StatusLED(Adafruit_NeoPixel* strip, int statusPixel);

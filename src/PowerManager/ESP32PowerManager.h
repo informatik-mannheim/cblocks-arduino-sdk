@@ -4,7 +4,7 @@
 #include "PowerManager.h"
 #include "Arduino.h"
 
-#define BATTERY_SHUT_DOWN_THRESHOLD_V 3.3
+#define BATTERY_SHUT_DOWN_THRESHOLD_V 3.0
 #define BATTERY_HIGH_THRESHOLD 3.6
 #define BATTERY_MEDIUM_THRESHOLD 3.4
 

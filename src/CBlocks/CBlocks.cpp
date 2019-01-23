@@ -122,6 +122,7 @@ namespace CBlocks{
 
   void CBlocks::heartBeat(){
     if(shouldTurnOff()){
+      Serial.println("Shutting down.");
       network->disconnect();
       powerManager->turnOff();
     }
