@@ -3,7 +3,7 @@
 
 #define STATE_RESOURCE 0
 #define EVENT_RESOURCE 1
-#define DEBOUNCE_MS 75
+#define DEBOUNCE_MS 50
 
 #include "Arduino.h"
 #include "CBlocks.h"
@@ -18,6 +18,7 @@ namespace CBlocks {
     bool hasPublished;
     Button* button;
     CBlocks* cblocks;
+    
 
   public:
     CButton(int buttonPin, CBlocks* cblocks);
@@ -46,6 +47,10 @@ namespace CBlocks {
     }
 
     if(button->wasPressed()){
+      cblocks->updateResource(EVENT_RESOURCE, String("pressed"));
+    }
+
+    if(button->wasReleased()){
       if(isOn){
         isOn = false;
       } else {
@@ -58,10 +63,6 @@ namespace CBlocks {
         cblocks->updateResource(STATE_RESOURCE, false);
       }
 
-      cblocks->updateResource(EVENT_RESOURCE, String("pressed"));
-    }
-
-    if(button->wasReleased()){
       cblocks->updateResource(EVENT_RESOURCE, String("released"));
     }
   }
