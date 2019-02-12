@@ -25,7 +25,6 @@
     "arduino-fsm": "2.2.0",
     "arduinoFFT": "1.4",
     "Adafruit MCP3008": "1.0.0",
-    "AstroMech": "
-  https://github.com/weckbach/AstroMech"
+    "AstroMech": "https://github.com/weckbach/AstroMech#0.1.1"
   }
 }
