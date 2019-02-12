@@ -5,7 +5,7 @@
 #include "Pairing.h"
 #include "WiFiLink.h"
 #include "UpdateTimer.h"
-#include "AstroMac.h"
+#include "AstroMech.h"
 
 namespace CBlocks{
   class AudioPairing: public Pairing{
@@ -16,11 +16,11 @@ namespace CBlocks{
     WiFiLink* wifiLink;
     Credentials credentials;
     UpdateTimer* debounceUpdateTimer;
-    AstroMac::AstroMac* astroMac;
+    AstroMech::AstroMech* astroMech;
 
     void clearCredentials();
   public:
-    AudioPairing(int pairingModePin, WiFiLink* wifiLink, AstroMac::AstroMac* astroMac);
+    AudioPairing(int pairingModePin, WiFiLink* wifiLink, AstroMech::AstroMech* astroMech);
     virtual void begin();
     virtual bool isPaired();
     virtual bool isPairingButtonOn();

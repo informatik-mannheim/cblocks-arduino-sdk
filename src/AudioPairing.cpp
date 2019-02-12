@@ -1,12 +1,12 @@
 #include "Arduino.h"
-#include "AstroMac.h"
+#include "AstroMech.h"
 #include "AudioPairing.h"
 #include "UpdateTimer.h"
 #include "EEPROM.h"
 
 namespace CBlocks{
-  AudioPairing::AudioPairing(int pairingModePin, WiFiLink* wifiLink, AstroMac::AstroMac* astroMac)
-  : pairingModePin(pairingModePin), wifiLink(wifiLink), astroMac(astroMac){
+  AudioPairing::AudioPairing(int pairingModePin, WiFiLink* wifiLink, AstroMech::AstroMech* astroMech)
+  : pairingModePin(pairingModePin), wifiLink(wifiLink), astroMech(astroMech){
     lastButtonState = HIGH;
     debounceUpdateTimer = new UpdateTimer(DEBOUNCE_MS);
   }
@@ -52,7 +52,7 @@ namespace CBlocks{
   }
 
   bool AudioPairing::pair(){
-    String data = astroMac->detect(); //TODO extra function
+    String data = astroMech->detect(); //TODO extra function
 
     if(data.length() && data.indexOf(';')){
       credentials.ssid = data.substring(0, data.indexOf(';'));
