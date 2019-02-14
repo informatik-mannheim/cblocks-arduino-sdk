@@ -14,7 +14,7 @@ namespace CBlocks{
 
   void ESP32PowerManager::begin(){
     pinMode(enablePin, OUTPUT);
-    pinMode(shutDownPin, INPUT_PULLUP);
+    pinMode(shutDownPin, INPUT);
     pinMode(batteryStatusPin, INPUT);
     attachInterrupt(digitalPinToInterrupt(shutDownPin), handleShutDownInterrupt, RISING);
 
