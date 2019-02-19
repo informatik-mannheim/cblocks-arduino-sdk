@@ -19,8 +19,9 @@
 
 namespace CBlocks{
   Adafruit_MCP3008* adc = new Adafruit_MCP3008();
+
   int analogReadFP(uint8_t pin){
-    adc->readADC(pin);
+    return adc->readADC(pin);
   }
 
   WiFiClient* CBlocksMaker::wifiClient = new WiFiClient();

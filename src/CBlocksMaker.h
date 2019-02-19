@@ -1,7 +1,6 @@
 #ifndef CBLOCKS_MAKER_H
 #define CBLOCKS_MAKER_H
 
-#include "CBlocksMaker.h"
 #include "CBlocks.h"
 #include "Link.h"
 #include "WiFiLink.h"
@@ -40,7 +39,6 @@
 #define MQTT_SOCKET_TIMEOUT 5
 
 namespace CBlocks{
-
   class CBlocksMaker{
   private:
     static WiFiClient* wifiClient;
