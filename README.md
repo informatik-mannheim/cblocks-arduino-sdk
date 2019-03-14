@@ -1,5 +1,4 @@
-# cblocks-arduino-sdk
-
+# cblocks Arduino SDK
 Arduino SDK for [cBlocks](https://github.com/informatik-mannheim/cblocks).
 
 ## Installation
