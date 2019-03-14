@@ -115,6 +115,8 @@ namespace CBlocks{
   }
 
   void CBlocks::onStateNotConnectedUpdate(){
+    network->ensureConnected();
+    
     if(pairing->isPairingButtonOn()){
       fsm->trigger(StateTransition::PAIRING_BUTTON_PRESSED);
     }
